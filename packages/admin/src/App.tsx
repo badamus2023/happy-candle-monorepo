@@ -12,9 +12,62 @@ const ContentWrapper = styled.div`
 `;
 
 const Header = styled.header`
-  height: 9rem;
+  display: flex;
+  height: 4.5rem;
   width: 100%;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 1rem;
   border-bottom: 1px solid #bf7ca911;
+`;
+
+const SearchBarContainer = styled.div`
+  display: flex;
+  border-radius: 0.5rem;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  gap: 1rem;
+`;
+
+const GlobalSearch = styled.input`
+  width: 100%;
+  height: 100%;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  width: 15rem;
+  height: 3rem;
+  padding: 1rem;
+  background-color: #f0f0f0;
+  border: 1px solid #bf7ca911;
+`;
+
+const ProfileDropdown = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 5rem;
+  background-color: #f0f0f0;
+`;
+
+const PageTitleContainer = styled.div`
+  display: flex;
+  border: 1px solid #bf7ca911;
+  background-color: #f0f0f087;
+  height: 5rem;
+  border-radius: 1rem;
+  align-items: flex-start;
+  align-items: center;
+  padding: 1rem;
+  margin: 1rem;
+`;
+
+const PageTitle = styled.div`
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #807cbf;
 `;
 
 const Sidebar = styled.div`
@@ -30,8 +83,10 @@ const SidebarTitleContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   height: 9rem;
   border-bottom: 1px solid #bf7ca911;
+  padding: 1rem;
 `;
 
 const SidebarItemContainer = styled.div`
@@ -102,6 +157,23 @@ const SidebarItem = styled.div<{ active?: boolean }>`
   }
 `;
 
+const DashboardGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  padding: 1rem;
+`;
+
+const WidgetCard = styled.div`
+  background-color: white;
+  border-radius: 1rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+`;
+
 function App() {
   return (
     <AppWrapper>
@@ -145,7 +217,21 @@ function App() {
         </SidebarItemContainer>
       </Sidebar>
       <ContentWrapper>
-        <Header></Header>
+        <Header>
+          <SearchBarContainer>
+            <GlobalSearch placeholder="Search..." />
+            <ProfileDropdown />
+          </SearchBarContainer>
+        </Header>
+        <PageTitleContainer>
+          <PageTitle>Dashboard</PageTitle>
+        </PageTitleContainer>
+        <DashboardGrid>
+          <WidgetCard>Total Orders</WidgetCard>
+          <WidgetCard>Revenue</WidgetCard>
+          <WidgetCard>Active Customers</WidgetCard>
+          <WidgetCard>Low Stock</WidgetCard>
+        </DashboardGrid>
       </ContentWrapper>
     </AppWrapper>
   );
