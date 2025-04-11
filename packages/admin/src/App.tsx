@@ -1,5 +1,9 @@
 import styled from "styled-components";
 import HappyCandleLogo from "./assets/happy-candle-logo.png";
+import AlertLogo from "./assets/alert-svgrepo-com.svg?react";
+import InformationCard from "./components/Dashboard/InformationCard";
+import AlertCard from "./components/Dashboard/AlertCard";
+import SalesChart from "./components/Dashboard/SalesChart";
 
 const AppWrapper = styled.div`
   display: flex;
@@ -159,19 +163,18 @@ const SidebarItem = styled.div<{ active?: boolean }>`
 
 const DashboardGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-areas:
+    "card1 card2 card3 alert"
+    "chart chart orders orders";
+  grid-template-columns: repeat(4, 1fr);
   gap: 1.5rem;
   padding: 1rem;
 `;
 
-const WidgetCard = styled.div`
-  background-color: white;
-  border-radius: 1rem;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-  padding: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+const StyledWarningIcon = styled(AlertLogo)`
+  width: 50px;
+  height: 50px;
+  fill: #bf7ca6;
 `;
 
 function App() {
@@ -227,10 +230,31 @@ function App() {
           <PageTitle>Dashboard</PageTitle>
         </PageTitleContainer>
         <DashboardGrid>
-          <WidgetCard>Total Orders</WidgetCard>
-          <WidgetCard>Revenue</WidgetCard>
-          <WidgetCard>Active Customers</WidgetCard>
-          <WidgetCard>Low Stock</WidgetCard>
+          <InformationCard
+            area="card1"
+            title="Total Sales"
+            value="1,296"
+            backgroundColor="#bf7ca982"
+          />
+          <InformationCard
+            area="card2"
+            title="Revenue"
+            value="12,050$"
+            backgroundColor="#bf867c80"
+          />
+          <InformationCard
+            area="card3"
+            title="Active Customers"
+            value="406"
+            backgroundColor="#b57cbf84"
+          />
+          <AlertCard
+            title="Low Stock Alert"
+            warning="5 products are low on stock"
+          >
+            <StyledWarningIcon />
+          </AlertCard>
+          <SalesChart area="chart" />
         </DashboardGrid>
       </ContentWrapper>
     </AppWrapper>
