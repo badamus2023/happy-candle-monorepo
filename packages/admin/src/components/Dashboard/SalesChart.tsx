@@ -21,7 +21,7 @@ const SalesChartContainer = styled.div<{ area?: string }>`
   justify-content: center;
   padding: 2rem;
   width: 100%;
-  height: 35rem;
+  height: 25rem;
 `;
 
 const salesData = [

@@ -1,9 +1,10 @@
 import styled from "styled-components";
 import HappyCandleLogo from "./assets/happy-candle-logo.png";
-import AlertLogo from "./assets/alert-svgrepo-com.svg?react";
+import ProfileIcon from "./assets/user.png";
 import InformationCard from "./components/Dashboard/InformationCard";
 import AlertCard from "./components/Dashboard/AlertCard";
 import SalesChart from "./components/Dashboard/SalesChart";
+import RecentOrdersTable from "./components/Dashboard/RecentOrdersTable";
 
 const AppWrapper = styled.div`
   display: flex;
@@ -54,6 +55,12 @@ const ProfileDropdown = styled.div`
   height: 3rem;
   border-radius: 5rem;
   background-color: #f0f0f0;
+`;
+
+const ProfileImage = styled.img`
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
 `;
 
 const PageTitleContainer = styled.div`
@@ -171,12 +178,6 @@ const DashboardGrid = styled.div`
   padding: 1rem;
 `;
 
-const StyledWarningIcon = styled(AlertLogo)`
-  width: 50px;
-  height: 50px;
-  fill: #bf7ca6;
-`;
-
 function App() {
   return (
     <AppWrapper>
@@ -223,7 +224,9 @@ function App() {
         <Header>
           <SearchBarContainer>
             <GlobalSearch placeholder="Search..." />
-            <ProfileDropdown />
+            <ProfileDropdown>
+              <ProfileImage src={ProfileIcon} alt="Profile" />
+            </ProfileDropdown>
           </SearchBarContainer>
         </Header>
         <PageTitleContainer>
@@ -251,10 +254,9 @@ function App() {
           <AlertCard
             title="Low Stock Alert"
             warning="5 products are low on stock"
-          >
-            <StyledWarningIcon />
-          </AlertCard>
+          ></AlertCard>
           <SalesChart area="chart" />
+          <RecentOrdersTable area="orders" />
         </DashboardGrid>
       </ContentWrapper>
     </AppWrapper>

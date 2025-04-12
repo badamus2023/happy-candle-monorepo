@@ -1,4 +1,5 @@
 import React from "react";
+import AlertLogo from "../../assets/alert-svgrepo-com.svg?react";
 import styled from "styled-components";
 
 const AlertCardContainer = styled.div`
@@ -37,16 +38,21 @@ const AlertItem = styled.div`
   text-align: center;
 `;
 
+const StyledWarningIcon = styled(AlertLogo)`
+  width: 50px;
+  height: 50px;
+  fill: #bf7ca6;
+`;
+
 interface AlertCardProps {
   title: string;
   warning: string;
-  children?: React.ReactNode;
 }
 
-const AlertCard: React.FC<AlertCardProps> = ({ children, warning, title }) => {
+const AlertCard: React.FC<AlertCardProps> = ({ warning, title }) => {
   return (
     <AlertCardContainer>
-      {children}
+      <StyledWarningIcon />
       <AlertTile>{title}</AlertTile>
       <AlertItemContainer>
         <AlertItem>{warning}</AlertItem>
