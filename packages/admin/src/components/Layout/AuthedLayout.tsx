@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import HappyCandleLogo from "../../assets/happy-candle-logo.png";
 import ProfileIcon from "../../assets/user.png";
+import { Link, useRouterState } from "@tanstack/react-router";
 
 const AppWrapper = styled.div`
   display: flex;
@@ -127,7 +128,7 @@ const SidebarSection = styled.div`
   flex-direction: column;
 `;
 
-const SidebarItem = styled.div<{ active?: boolean }>`
+const SidebarItem = styled(Link)<{ active?: boolean }>`
   cursor: pointer;
   padding: 1rem;
   font-size: 0.875rem;
@@ -151,6 +152,8 @@ interface AuthedLayoutProps {
 }
 
 const AuthedLayout: React.FC<AuthedLayoutProps> = ({ children }) => {
+  const { pathname } = useRouterState().location;
+
   return (
     <AppWrapper>
       <Sidebar>
@@ -164,31 +167,49 @@ const AuthedLayout: React.FC<AuthedLayoutProps> = ({ children }) => {
         <SidebarItemContainer>
           <SidebarSection>
             <SectionTitle>MAIN</SectionTitle>
-            <SidebarItem active={true}>Dashboard</SidebarItem>
-            <SidebarItem>Report</SidebarItem>
-            <SidebarItem>Statistics</SidebarItem>
+            <SidebarItem to="/" active={pathname === "/"}>
+              Dashboard
+            </SidebarItem>
+            <SidebarItem to="/report" active={pathname === "/report"}>
+              Report
+            </SidebarItem>
+            <SidebarItem to="/statistics" active={pathname === "/statistics"}>
+              Statistics
+            </SidebarItem>
           </SidebarSection>
 
           <SidebarSection>
             <SectionTitle>Store Management</SectionTitle>
-            <SidebarItem>Products</SidebarItem>
-            <SidebarItem>Categories</SidebarItem>
-            <SidebarItem>Discounts</SidebarItem>
+            <SidebarItem to="/products" active={pathname === "/products"}>
+              Products
+            </SidebarItem>
+            <SidebarItem to="/categories" active={pathname === "/categories"}>
+              Categories
+            </SidebarItem>
+            <SidebarItem to="/discounts" active={pathname === "/discounts"}>
+              Discounts
+            </SidebarItem>
           </SidebarSection>
 
           <SidebarSection>
             <SectionTitle>Orders</SectionTitle>
-            <SidebarItem>Orders</SidebarItem>
+            <SidebarItem to="/orders" active={pathname === "/orders"}>
+              Orders
+            </SidebarItem>
           </SidebarSection>
 
           <SidebarSection>
             <SectionTitle>Users</SectionTitle>
-            <SidebarItem>Customers</SidebarItem>
+            <SidebarItem to="/customers" active={pathname === "/customers"}>
+              Customers
+            </SidebarItem>
           </SidebarSection>
 
           <SidebarSection>
             <SectionTitle>System</SectionTitle>
-            <SidebarItem>Settings</SidebarItem>
+            <SidebarItem to="/settings" active={pathname === "/settings"}>
+              Settings
+            </SidebarItem>
           </SidebarSection>
         </SidebarItemContainer>
       </Sidebar>
