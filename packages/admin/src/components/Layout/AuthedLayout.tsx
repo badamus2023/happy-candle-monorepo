@@ -11,6 +11,7 @@ const ContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+  min-height: 100vh;
 `;
 
 const Header = styled.header`
@@ -147,6 +148,22 @@ const SidebarItem = styled(Link)<{ active?: boolean }>`
   }
 `;
 
+const MainContent = styled.main`
+  flex: 1;
+  padding: 1rem;
+`;
+
+const Footer = styled.footer`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  justify-self: flex-end;
+  height: 3rem;
+  border-top: 1px solid #bf7ca911;
+  font-size: 0.75rem;
+  color: #999;
+`;
+
 interface AuthedLayoutProps {
   children?: React.ReactNode;
 }
@@ -222,7 +239,8 @@ const AuthedLayout: React.FC<AuthedLayoutProps> = ({ children }) => {
             </ProfileDropdown>
           </SearchBarContainer>
         </Header>
-        {children}
+        <MainContent>{children}</MainContent>
+        <Footer>Happy Candle © 2025 by Bartosz Adamus</Footer>
       </ContentWrapper>
     </AppWrapper>
   );
