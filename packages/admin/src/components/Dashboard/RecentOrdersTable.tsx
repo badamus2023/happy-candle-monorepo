@@ -24,7 +24,7 @@ const TableContainer = styled.div<{ area?: string }>`
   flex-direction: column;
   background-color: #ffffff;
   border-radius: 1rem;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
   overflow-x: auto;
   padding: 1.5rem;
 `;
