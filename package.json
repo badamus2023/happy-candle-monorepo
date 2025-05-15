@@ -2,6 +2,7 @@
   "name": "HappyCandle",
   "version": "1.0.0",
   "main": "index.js",
+  "packageManager": "yarn@1.22.22",
   "license": "MIT",
   "private": true,
   "workspaces": [

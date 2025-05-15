@@ -72,10 +72,6 @@ const Sidebar = styled.div`
   flex-direction: column;
   border-right: 1px solid #bf7ca911;
   background: linear-gradient(to bottom, #ffffff, #bf7ca911);
-  overflow-y: auto;
-
-  scrollbar-width: thin;
-  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
 `;
 
 const SidebarTitleContainer = styled.div`
@@ -94,6 +90,10 @@ const SidebarItemContainer = styled.div`
   gap: 1rem;
   padding: 1rem;
   flex: 1;
+  overflow-y: auto;
+
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
 `;
 
 const Logo = styled.img`
