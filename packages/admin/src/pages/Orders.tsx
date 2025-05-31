@@ -1,6 +1,16 @@
-import Flex from "../components/Common/Flex";
+import styled from "styled-components";
 import PageTitle from "../components/Common/PageTitle";
 import OrderCard from "../components/Orders/OrdersCard";
+
+const GridContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+  gap: 1rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  align-items: start;
+  grid-template-rows: masonry;
+`;
 
 const dummyOrders = [
   {
@@ -54,7 +64,7 @@ const OrdersPage = () => {
   return (
     <>
       <PageTitle title="Orders" />
-      <Flex flexWrap="wrap" gap="1rem" alignItems="flex-start" ml mr>
+      <GridContainer>
         {dummyOrders.map((order) => (
           <OrderCard
             key={order.id}
@@ -82,7 +92,7 @@ const OrdersPage = () => {
             ]}
           />
         ))}
-      </Flex>
+      </GridContainer>
     </>
   );
 };

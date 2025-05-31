@@ -1,13 +1,23 @@
-import Flex from "../components/Common/Flex";
+import styled from "styled-components";
 import FloatingAddButton from "../components/Common/FloatingAddButton";
 import PageTitle from "../components/Common/PageTitle";
 import DiscountCard from "../components/Discounts/DiscountsCard";
+
+const GridContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+  gap: 1rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  align-items: start;
+  grid-template-rows: masonry;
+`;
 
 const DiscountsPage = () => {
   return (
     <>
       <PageTitle title="Discounts" />
-      <Flex flexWrap="wrap" gap="1rem" alignItems="flex-start" ml mr>
+      <GridContainer>
         <DiscountCard
           id="d001"
           code="SUMMER20"
@@ -67,7 +77,7 @@ const DiscountsPage = () => {
           status="Active"
           actions={[{ label: "Send to VIPs", onClick: () => alert("Sent!") }]}
         />
-      </Flex>
+      </GridContainer>
       <FloatingAddButton />
     </>
   );

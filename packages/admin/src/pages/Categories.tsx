@@ -5,7 +5,7 @@ import PageTitle from "../components/Common/PageTitle";
 
 const GridContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(21rem, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
   gap: 1rem;
   margin-left: 1rem;
   margin-right: 1rem;
