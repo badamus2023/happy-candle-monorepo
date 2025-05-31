@@ -1,13 +1,23 @@
+import styled from "styled-components";
 import CategoryCard from "../components/Categories/CategoryCard";
-import Flex from "../components/Common/Flex";
 import FloatingAddButton from "../components/Common/FloatingAddButton";
 import PageTitle from "../components/Common/PageTitle";
+
+const GridContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(21rem, 1fr));
+  gap: 1rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  align-items: start;
+  grid-template-rows: masonry;
+`;
 
 const CategoriesPage = () => {
   return (
     <>
       <PageTitle title="Categories" />
-      <Flex flexWrap="wrap" gap="1rem" alignItems="flex-start" ml mr>
+      <GridContainer>
         <CategoryCard
           id="cat1"
           name="Candles"
@@ -45,7 +55,13 @@ const CategoriesPage = () => {
           productCount={5}
         />
         <CategoryCard id="cat6" name="Gift Sets" productCount={3} />
-      </Flex>
+        <CategoryCard
+          id="cat2"
+          description="No more allergy in your house"
+          name="Diffusers"
+          productCount={8}
+        />
+      </GridContainer>
       <FloatingAddButton />
     </>
   );

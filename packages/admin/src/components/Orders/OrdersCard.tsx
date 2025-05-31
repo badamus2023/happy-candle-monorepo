@@ -1,12 +1,9 @@
 import React, { useState, useCallback } from "react";
 import styled from "styled-components";
-import Flex from "../Common/Flex";
 
 const Card = styled.div<{ area?: string }>`
-  min-width: 15rem;
-  min-height: 12rem;
   grid-area: ${({ area }) => area || "auto"};
-  background: #fff;
+  background: #ffffff;
   border-radius: 1rem;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
   padding: 1rem;
@@ -15,39 +12,56 @@ const Card = styled.div<{ area?: string }>`
   position: relative;
 `;
 
-const Code = styled.p`
-  font-size: 1.25rem;
-  font-weight: 700;
+const OrderHeader = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+`;
+
+const OrderNumber = styled.p`
+  font-size: 1.1rem;
+  font-weight: 600;
   margin: 0;
   color: #2c2c2c;
 `;
 
-const Description = styled.p`
+const CustomerName = styled.p`
   font-size: 0.9rem;
+  margin: 0;
   color: #4b5563;
-  margin: 0.5rem 0;
 `;
 
-const Amount = styled.span`
+const OrderDate = styled.p`
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin: 0;
+`;
+
+const TotalAmount = styled.p`
   font-size: 1rem;
   font-weight: 500;
   color: #065f46;
+  margin: 0.5rem 0;
 `;
 
-const Expiry = styled.p`
-  font-size: 0.8rem;
-  color: #6b7280;
-  margin: 0.5rem 0 0;
-`;
-
-const StatusBadge = styled.span<{ status: "Active" | "Expired" }>`
+const StatusBadge = styled.span<{
+  status: "Pending" | "Completed" | "Cancelled";
+}>`
   font-size: 0.75rem;
   padding: 0.25rem 0.5rem;
   border-radius: 0.5rem;
   background-color: ${({ status }) =>
-    status === "Active" ? "#d1fae5" : "#fee2e2"};
-  color: ${({ status }) => (status === "Active" ? "#065f46" : "#b91c1c")};
-  margin-top: 0.5rem;
+    status === "Completed"
+      ? "#d1fae5"
+      : status === "Cancelled"
+        ? "#fee2e2"
+        : "#fef3c7"};
+  color: ${({ status }) =>
+    status === "Completed"
+      ? "#065f46"
+      : status === "Cancelled"
+        ? "#b91c1c"
+        : "#92400e"};
   align-self: flex-start;
 `;
 
@@ -75,22 +89,24 @@ const ActionsMenu = styled.div`
 `;
 
 const MenuItem = styled.button<{ disabled?: boolean }>`
-  background: #10b981;
+  background-color: #3b82f6;
   color: #fff;
   border: none;
   border-radius: 0.5rem;
   padding: 0.6rem;
   font-size: 0.9rem;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background-color 0.2s;
+
   &:hover:not([disabled]) {
-    background: #059669;
+    background-color: #2563eb;
   }
+
   ${({ disabled }) =>
     disabled &&
     `
-      opacity: 0.5;
-      cursor: not-allowed;
+    opacity: 0.5;
+    cursor: not-allowed;
   `}
 `;
 
@@ -100,71 +116,76 @@ export interface Action {
   disabled?: boolean;
 }
 
-export interface DiscountProps {
+export interface OrderProps {
   id: string;
   area?: string;
-  code: string;
-  description?: string;
-  type: "percentage" | "fixed";
-  amount: number;
+  orderNumber: string;
+  customerName: string;
+  orderDate: string;
+  totalAmount: number;
   currency?: string;
-  expiryDate: string;
-  status?: "Active" | "Expired";
+  status?: "Pending" | "Completed" | "Cancelled";
   actions?: Action[];
 }
 
-const DiscountCard: React.FC<DiscountProps> = ({
+const OrderCard: React.FC<OrderProps> = ({
   id,
   area,
-  code,
-  description,
-  type,
-  amount,
+  orderNumber,
+  customerName,
+  orderDate,
+  totalAmount,
   currency = "USD",
-  expiryDate,
-  status = "Active",
+  status = "Pending",
   actions,
 }) => {
   const [expanded, setExpanded] = useState(false);
   const toggle = useCallback(() => setExpanded((e) => !e), []);
 
-  const formattedAmount =
-    type === "percentage"
-      ? `${amount}% off`
-      : `${currency} ${amount.toFixed(2)}`;
+  const formattedTotal = `${currency} ${totalAmount.toFixed(2)}`;
 
   const defaultActions: Action[] = [
-    { label: "Edit Discount", onClick: () => console.log("edit", id) },
-    { label: "Delete Discount", onClick: () => console.log("delete", id) },
+    { label: "View Details", onClick: () => console.log("view", id) },
     {
-      label: status === "Active" ? "Expire Now" : "Activate",
+      label: status === "Pending" ? "Mark Complete" : "Reopen Order",
       onClick: () => console.log("toggle status", id),
+    },
+    {
+      label: "Print Invoice",
+      onClick: () => console.log("print invoice", id),
+      disabled: status === "Cancelled",
+    },
+    {
+      label: "Cancel Order",
+      onClick: () => console.log("cancel", id),
+      disabled: status !== "Pending",
     },
   ];
 
-  const menuActions = actions?.length ? actions : defaultActions;
+  const menuActions = actions && actions.length > 0 ? actions : defaultActions;
 
   return (
     <Card area={area}>
-      <Flex flexDirection="column" gap="0.25rem">
-        <Code>{code}</Code>
-        {description && <Description>{description}</Description>}
-        <Amount>{formattedAmount}</Amount>
-        <Expiry>Expires on: {expiryDate}</Expiry>
-        <StatusBadge status={status}>{status}</StatusBadge>
-      </Flex>
+      <OrderHeader>
+        <OrderNumber>Order #{orderNumber}</OrderNumber>
+        <CustomerName>Customer: {customerName}</CustomerName>
+        <OrderDate>Date: {orderDate}</OrderDate>
+      </OrderHeader>
+
+      <TotalAmount>Total: {formattedTotal}</TotalAmount>
+      <StatusBadge status={status!}>{status}</StatusBadge>
 
       <ToggleButton
         onClick={toggle}
         aria-expanded={expanded}
-        aria-controls={`disc-actions-${id}`}
+        aria-controls={`order-actions-${id}`}
         aria-label={expanded ? "Hide actions" : "Show actions"}
       >
         ↓
       </ToggleButton>
 
       {expanded && (
-        <ActionsMenu id={`disc-actions-${id}`} role="menu">
+        <ActionsMenu id={`order-actions-${id}`} role="menu">
           {menuActions.map(({ label, onClick, disabled }) => (
             <MenuItem
               key={label}
@@ -181,4 +202,4 @@ const DiscountCard: React.FC<DiscountProps> = ({
   );
 };
 
-export default DiscountCard;
+export default OrderCard;

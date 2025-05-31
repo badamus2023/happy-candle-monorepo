@@ -1,7 +1,7 @@
 import Flex from "../components/Common/Flex";
 import FloatingAddButton from "../components/Common/FloatingAddButton";
 import PageTitle from "../components/Common/PageTitle";
-import DiscountCard from "../components/DIscounts/DiscountsCard";
+import DiscountCard from "../components/Discounts/DiscountsCard";
 
 const DiscountsPage = () => {
   return (

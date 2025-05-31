@@ -1,4 +1,3 @@
-// CustomerCard.tsx
 import React, { useState, useCallback } from "react";
 import styled from "styled-components";
 import Flex from "../Common/Flex";
@@ -113,7 +112,7 @@ export interface CustomerProps {
   name: string;
   email: string;
   avatarUrl?: string;
-  joinedAt?: string; // iso date or friendly string
+  joinedAt?: string;
   status?: "Active" | "Inactive" | "Pending";
   actions?: Action[];
 }
