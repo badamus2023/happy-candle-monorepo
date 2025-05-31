@@ -2,43 +2,23 @@ import styled from "styled-components";
 import ProductCard from "../components/Products/ProductCard";
 import testCandle from "../assets/test-candle.jpg";
 import FloatingAddButton from "../components/Common/FloatingAddButton";
+import PageTitle from "../components/Common/PageTitle";
 
-const ProductsGrid = styled.div`
+const GridContainer = styled.div`
   display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+  gap: 1rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
   align-items: start;
-  grid-template-areas:
-    "card1 card2 card3 card4"
-    "card5 card6 card7 card8";
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1.5rem;
-  padding: 1rem;
-`;
-
-const PageTitleContainer = styled.div`
-  display: flex;
-  border: 1px solid #bf7ca911;
-  background-color: #f0f0f087;
-  height: 5rem;
-  border-radius: 1rem;
-  align-items: flex-start;
-  align-items: center;
-  padding: 1rem;
-  margin: 1rem;
-`;
-
-const PageTitle = styled.div`
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #807cbf;
+  grid-template-rows: masonry;
 `;
 
 const Products = () => {
   return (
     <>
-      <PageTitleContainer>
-        <PageTitle>Products</PageTitle>
-      </PageTitleContainer>
-      <ProductsGrid>
+      <PageTitle title="Products" />
+      <GridContainer>
         <ProductCard
           id="1"
           area="card1"
@@ -68,7 +48,7 @@ const Products = () => {
           price="14.00 zł"
           imageUrl={testCandle}
         />
-      </ProductsGrid>
+      </GridContainer>
       <FloatingAddButton />
     </>
   );

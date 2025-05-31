@@ -3,14 +3,15 @@ import styled from "styled-components";
 import Flex from "../Common/Flex";
 
 const Card = styled.div<{ area?: string }>`
-  grid-area: ${(p) => p.area || "auto"};
   background-color: #ffffff;
+  min-height: 5rem;
+  min-width: 25rem;
   border-radius: 1rem;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
   padding: 1rem;
   display: flex;
+
   flex-direction: column;
-  justify-content: space-between;
   position: relative;
 `;
 
@@ -166,14 +167,7 @@ const CustomerCard: React.FC<CustomerProps> = ({
         </div>
       </Flex>
 
-      <ToggleButton
-        onClick={toggle}
-        aria-expanded={expanded}
-        aria-controls={`cust-actions-${id}`}
-        aria-label={expanded ? "Hide actions" : "Show actions"}
-      >
-        ↓
-      </ToggleButton>
+      <ToggleButton onClick={toggle}>↓</ToggleButton>
 
       {expanded && (
         <ActionsMenu id={`cust-actions-${id}`} role="menu">

@@ -1,6 +1,16 @@
-import Flex from "../components/Common/Flex";
+import styled from "styled-components";
 import PageTitle from "../components/Common/PageTitle";
 import CustomerCard from "../components/Customers/CustomerCard";
+
+const GridContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(25rem, 1fr));
+  gap: 1rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  align-items: start;
+  grid-template-rows: masonry;
+`;
 
 const CustomersPage = () => {
   const dummyCustomers = [
@@ -49,7 +59,7 @@ const CustomersPage = () => {
   return (
     <>
       <PageTitle title="Customers" />
-      <Flex ml mr flexWrap="wrap" gap="1rem" alignItems="flex-start">
+      <GridContainer>
         {dummyCustomers.map((customer) => (
           <CustomerCard
             key={customer.id}
@@ -76,7 +86,7 @@ const CustomersPage = () => {
             ]}
           />
         ))}
-      </Flex>
+      </GridContainer>
     </>
   );
 };

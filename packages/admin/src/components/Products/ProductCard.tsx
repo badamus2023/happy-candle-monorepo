@@ -3,14 +3,14 @@ import Flex from "../Common/Flex";
 import { useState, useCallback } from "react";
 
 const Card = styled.div<{ area?: string }>`
-  grid-area: ${(p) => p.area || "auto"};
   background-color: #ffffff;
   border-radius: 1rem;
+  min-height: 20rem;
+  min-width: 20rem;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
   padding: 1rem;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
 `;
 
 const ProductTitle = styled.p`
@@ -148,14 +148,7 @@ const ProductCard: React.FC<ProductProps> = ({
           alignItems="center"
           border-top="1px solid #bf7ca911"
         >
-          <ToggleButton
-            onClick={toggle}
-            aria-expanded={expanded}
-            aria-controls={`actions-${id}`}
-            aria-label={expanded ? "Collapse options" : "Expand options"}
-          >
-            ↓
-          </ToggleButton>
+          <ToggleButton onClick={toggle}>↓</ToggleButton>
         </Flex>
 
         {expanded && (
