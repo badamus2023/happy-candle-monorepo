@@ -2,6 +2,8 @@ import styled from "styled-components";
 import CategoryCard from "../components/Categories/CategoryCard";
 import FloatingAddButton from "../components/Common/FloatingAddButton";
 import PageTitle from "../components/Common/PageTitle";
+import AddCategoryModal from "../components/Forms/AddCategory/AddCategoryModal";
+import { useState } from "react";
 
 const GridContainer = styled.div`
   display: grid;
@@ -14,6 +16,11 @@ const GridContainer = styled.div`
 `;
 
 const CategoriesPage = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenModal = () => setIsModalOpen(true);
+  const handleCloseModal = () => setIsModalOpen(false);
+
   return (
     <>
       <PageTitle title="Categories" />
@@ -62,7 +69,12 @@ const CategoriesPage = () => {
           productCount={8}
         />
       </GridContainer>
-      <FloatingAddButton />
+      <FloatingAddButton onClick={handleOpenModal} />
+      <AddCategoryModal
+        isOpen={isModalOpen}
+        onRequestClose={handleCloseModal}
+        onSubmit={() => alert("Category Added")}
+      />
     </>
   );
 };

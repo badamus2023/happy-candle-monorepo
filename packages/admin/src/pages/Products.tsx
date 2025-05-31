@@ -3,6 +3,8 @@ import ProductCard from "../components/Products/ProductCard";
 import testCandle from "../assets/test-candle.jpg";
 import FloatingAddButton from "../components/Common/FloatingAddButton";
 import PageTitle from "../components/Common/PageTitle";
+import AddProductModal from "../components/Forms/AddProduct/AddProductModal";
+import { useState } from "react";
 
 const GridContainer = styled.div`
   display: grid;
@@ -15,6 +17,11 @@ const GridContainer = styled.div`
 `;
 
 const Products = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenModal = () => setIsModalOpen(true);
+  const handleCloseModal = () => setIsModalOpen(false);
+
   return (
     <>
       <PageTitle title="Products" />
@@ -49,7 +56,12 @@ const Products = () => {
           imageUrl={testCandle}
         />
       </GridContainer>
-      <FloatingAddButton />
+      <FloatingAddButton onClick={handleOpenModal} />
+      <AddProductModal
+        isOpen={isModalOpen}
+        onRequestClose={handleCloseModal}
+        onSubmit={() => alert("Submit")}
+      />
     </>
   );
 };

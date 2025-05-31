@@ -7,5 +7,11 @@
   "private": true,
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "dependencies": {
+    "react-modal": "^3.16.3"
+  },
+  "devDependencies": {
+    "@types/react-modal": "^3.16.3"
+  }
 }

@@ -2,6 +2,8 @@ import styled from "styled-components";
 import FloatingAddButton from "../components/Common/FloatingAddButton";
 import PageTitle from "../components/Common/PageTitle";
 import DiscountCard from "../components/Discounts/DiscountsCard";
+import AddDiscountModal from "../components/Forms/AddDiscount/AddDiscountModal";
+import { useState } from "react";
 
 const GridContainer = styled.div`
   display: grid;
@@ -14,6 +16,11 @@ const GridContainer = styled.div`
 `;
 
 const DiscountsPage = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenModal = () => setIsModalOpen(true);
+  const handleCloseModal = () => setIsModalOpen(false);
+
   return (
     <>
       <PageTitle title="Discounts" />
@@ -78,7 +85,12 @@ const DiscountsPage = () => {
           actions={[{ label: "Send to VIPs", onClick: () => alert("Sent!") }]}
         />
       </GridContainer>
-      <FloatingAddButton />
+      <FloatingAddButton onClick={handleOpenModal} />
+      <AddDiscountModal
+        isOpen={isModalOpen}
+        onRequestClose={handleCloseModal}
+        onSubmit={() => alert("Discount Added")}
+      />
     </>
   );
 };

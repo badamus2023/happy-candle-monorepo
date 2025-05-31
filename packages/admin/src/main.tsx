@@ -1,9 +1,12 @@
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
+import ReactModal from "react-modal";
 import "./index.css";
 
 import { routeTree } from "./routeTree.gen";
+
+ReactModal.setAppElement("#root");
 
 const router = createRouter({ routeTree });
 

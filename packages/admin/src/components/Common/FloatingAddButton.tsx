@@ -1,3 +1,4 @@
+import { useState } from "react";
 import styled from "styled-components";
 
 const StyledFloatingAddButton = styled.button`
@@ -23,8 +24,12 @@ const StyledFloatingAddButton = styled.button`
   }
 `;
 
-const FloatingAddButton: React.FC = () => {
-  return <StyledFloatingAddButton>+</StyledFloatingAddButton>;
+interface FloatingAddButtonProps {
+  onClick?: () => void;
+}
+
+const FloatingAddButton: React.FC<FloatingAddButtonProps> = ({ onClick }) => {
+  return <StyledFloatingAddButton onClick={onClick}>+</StyledFloatingAddButton>;
 };
 
 export default FloatingAddButton;
