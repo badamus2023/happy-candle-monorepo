@@ -5,7 +5,7 @@ export interface FlexProps extends React.HTMLAttributes<HTMLDivElement> {
   flexDirection?: React.CSSProperties["flexDirection"];
   justifyContent?: React.CSSProperties["justifyContent"];
   "border-top"?: React.CSSProperties["borderTop"];
-  alignItems?: React.CSSProperties["alignItems"];
+  $alignItems?: React.CSSProperties["alignItems"];
   flexWrap?: React.CSSProperties["flexWrap"];
   gap?: React.CSSProperties["gap"];
   flex?: React.CSSProperties["flex"];
@@ -30,7 +30,7 @@ const FlexContainer = styled.div<FlexProps>`
   flex-direction: ${({ flexDirection = "row" }) => flexDirection};
   justify-content: ${({ justifyContent = "flex-start" }) => justifyContent};
   border-top: ${({ "border-top": borderTop }) => borderTop || "none"};
-  align-items: ${({ alignItems = "stretch" }) => alignItems};
+  align-items: ${({ $alignItems = "stretch" }) => $alignItems};
   flex-wrap: ${({ flexWrap = "nowrap" }) => flexWrap};
   gap: ${({ gap = "0" }) => gap};
   flex: ${({ flex = "initial" }) => flex};

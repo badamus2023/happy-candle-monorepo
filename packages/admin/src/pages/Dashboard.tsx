@@ -4,6 +4,7 @@ import SalesChart from "../components/Dashboard/SalesChart";
 import RecentOrdersTable from "../components/Dashboard/RecentOrdersTable";
 import styled from "styled-components";
 import PageTitle from "../components/Common/PageTitle";
+import SettingModal from "../containers/Setting/SettingModal";
 
 const DashboardGrid = styled.div`
   display: grid;
@@ -45,6 +46,7 @@ const Dashboard = () => {
         <SalesChart area="chart" />
         <RecentOrdersTable area="orders" />
       </DashboardGrid>
+      <SettingModal name="Happy Candle" />
     </>
   );
 };

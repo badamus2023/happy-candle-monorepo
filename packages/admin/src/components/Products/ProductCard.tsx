@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import Flex from "../Common/Flex";
 import { useState, useCallback } from "react";
+import SettingModal from "../../containers/Setting/SettingModal";
 
 const Card = styled.div<{ area?: string }>`
   background-color: #ffffff;
@@ -8,7 +9,7 @@ const Card = styled.div<{ area?: string }>`
   min-height: 20rem;
   min-width: 20rem;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
-  padding: 1rem;
+  padding: 0.5rem;
   display: flex;
   flex-direction: column;
 `;
@@ -58,36 +59,6 @@ const ToggleButton = styled.button`
   }
 `;
 
-const ActionsMenu = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-`;
-
-const MenuItem = styled.button<{ disabled?: boolean }>`
-  background-color: #bf7ca6;
-  width: 100%;
-  color: #ffffff;
-  border: none;
-  border-radius: 0.5rem;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  padding: 0.75rem;
-
-  &:hover:not([disabled]) {
-    background-color: #a05a8d;
-  }
-
-  ${({ disabled }) =>
-    disabled &&
-    `
-    opacity: 0.5;
-    cursor: not-allowed;
-  `}
-`;
-
 export interface Action {
   label: string;
   onClick: () => void;
@@ -111,66 +82,43 @@ const ProductCard: React.FC<ProductProps> = ({
   price,
   imageUrl,
   inStock = 0,
-  actions,
 }) => {
-  const [expanded, setExpanded] = useState(false);
+  const [isModalOpen, setModalOpen] = useState(false);
   const stockText = inStock > 0 ? `${inStock} left in stock` : "Out of stock";
 
-  const toggle = useCallback(() => setExpanded((e) => !e), []);
+  const handleModalOpen = () => {
+    setModalOpen(true);
+  };
 
-  const defaultActions: Action[] = [
-    { label: "Edit", onClick: () => console.log("edit", id) },
-    {
-      label: "Delete",
-      onClick: () => console.log("delete", id),
-      disabled: inStock === 0,
-    },
-  ];
-
-  const menuActions = actions && actions.length > 0 ? actions : defaultActions;
+  const handleModalClose = () => {
+    setModalOpen(false);
+  };
 
   return (
-    <Card area={area}>
-      <Flex flexDirection="column" gap="0.5rem">
-        <Flex
-          flexDirection="column"
-          justifyContent="center"
-          alignItems="center"
-        >
-          <ProductTitle>{title}</ProductTitle>
-          <ProductImage src={imageUrl} alt={title} />
-          <ProductPrice>{price}</ProductPrice>
-          <StockCount>{stockText}</StockCount>
-        </Flex>
-
-        <Flex
-          justifyContent="flex-end"
-          alignItems="center"
-          border-top="1px solid #bf7ca911"
-        >
-          <ToggleButton onClick={toggle}>↓</ToggleButton>
-        </Flex>
-
-        {expanded && (
-          <ActionsMenu
-            id={`actions-${id}`}
-            role="menu"
-            aria-label="Product actions"
+    <>
+      <Card area={area}>
+        <Flex flexDirection="column">
+          <Flex justifyContent="flex-end" $alignItems="center">
+            <ToggleButton onClick={handleModalOpen}>...</ToggleButton>
+          </Flex>
+          <Flex
+            flexDirection="column"
+            justifyContent="center"
+            $alignItems="center"
           >
-            {menuActions.map(({ label, onClick, disabled }) => (
-              <MenuItem
-                key={label}
-                onClick={onClick}
-                disabled={disabled}
-                role="menuitem"
-              >
-                {label}
-              </MenuItem>
-            ))}
-          </ActionsMenu>
-        )}
-      </Flex>
-    </Card>
+            <ProductTitle>{title}</ProductTitle>
+            <ProductImage src={imageUrl} alt={title} />
+            <ProductPrice>{price}</ProductPrice>
+            <StockCount>{stockText}</StockCount>
+          </Flex>
+        </Flex>
+      </Card>
+      <SettingModal
+        isOpen={isModalOpen}
+        onRequestClose={handleModalClose}
+        name={title}
+      />
+    </>
   );
 };
 
