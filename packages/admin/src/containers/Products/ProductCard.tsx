@@ -1,8 +1,9 @@
 import styled from "styled-components";
-import Flex from "../Common/Flex";
+import Flex from "../../components/Common/Flex";
 import { useState } from "react";
-import SettingModal from "../../containers/Setting/SettingModal";
+import SettingModal from "../Setting/SettingModal";
 import { SettingItem } from "../../types/types";
+import MenuButton from "../../components/Common/MenuButton";
 
 const Card = styled.div<{ area?: string }>`
   background-color: #ffffff;
@@ -41,23 +42,6 @@ const StockCount = styled.p`
   font-weight: 400;
   color: #6b7280;
   text-align: center;
-`;
-
-const ToggleButton = styled.button`
-  background: none;
-  border: none;
-  font-size: 1.25rem;
-  cursor: pointer;
-  padding: 0.5rem;
-  transition: transform 0.2s;
-
-  &:hover {
-    color: #bf7ca6;
-  }
-
-  &[aria-expanded="true"] {
-    transform: rotate(180deg);
-  }
 `;
 
 export interface Action {
@@ -106,7 +90,7 @@ const ProductCard: React.FC<ProductProps> = ({
       <Card area={area}>
         <Flex flexDirection="column">
           <Flex justifyContent="flex-end" $alignItems="center">
-            <ToggleButton onClick={handleModalOpen}>...</ToggleButton>
+            <MenuButton onClick={handleModalOpen}>...</MenuButton>
           </Flex>
           <Flex
             flexDirection="column"

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import Flex from "../Common/Flex";
-import SettingModal from "../../containers/Setting/SettingModal";
+import Flex from "../../components/Common/Flex";
+import SettingModal from "../Setting/SettingModal";
 import { SettingItem } from "../../types/types";
 
 const Card = styled.div<{ area?: string }>`

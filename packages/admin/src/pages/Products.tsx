@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import ProductCard from "../components/Products/ProductCard";
+import ProductCard from "../containers/Products/ProductCard";
 import testCandle from "../assets/test-candle.jpg";
 import FloatingAddButton from "../components/Common/FloatingAddButton";
 import PageTitle from "../components/Common/PageTitle";

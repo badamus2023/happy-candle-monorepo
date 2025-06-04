@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import PageTitle from "../components/Common/PageTitle";
-import CustomerCard from "../components/Customers/CustomerCard";
+import CustomerCard from "../containers/Customers/CustomerCard";
 
 const GridContainer = styled.div`
   display: grid;
@@ -69,21 +69,6 @@ const CustomersPage = () => {
             email={customer.email}
             joinedAt={customer.joinedAt}
             status={customer.status}
-            actions={[
-              {
-                label: "View Orders",
-                onClick: () => alert(`View Orders for ${customer.name}`),
-              },
-              {
-                label: "Suspend",
-                onClick: () => alert(`Suspend ${customer.name}`),
-                disabled: customer.status !== "Active",
-              },
-              {
-                label: "Message",
-                onClick: () => alert(`Message ${customer.name}`),
-              },
-            ]}
           />
         ))}
       </GridContainer>

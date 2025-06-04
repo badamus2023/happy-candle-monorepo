@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import CategoryCard from "../components/Categories/CategoryCard";
+import CategoryCard from "../containers/Categories/CategoryCard";
 import FloatingAddButton from "../components/Common/FloatingAddButton";
 import PageTitle from "../components/Common/PageTitle";
 import AddCategoryModal from "../components/Forms/AddCategory/AddCategoryModal";

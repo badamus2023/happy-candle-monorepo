@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import FloatingAddButton from "../components/Common/FloatingAddButton";
 import PageTitle from "../components/Common/PageTitle";
-import DiscountCard from "../components/Discounts/DiscountsCard";
+import DiscountCard from "../containers/Discounts/DiscountsCard";
 import AddDiscountModal from "../components/Forms/AddDiscount/AddDiscountModal";
 import { useState } from "react";
 
