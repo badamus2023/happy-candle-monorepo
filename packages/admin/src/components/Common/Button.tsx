@@ -15,7 +15,7 @@ const Button = styled.button<StyledButtonInterface>`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #bf7ca6;
+  background-color: ${({ bgc }) => bgc || "#bf7ca6"};
   width: ${({ wd }) => wd || "100%"};
   color: #ffffff;
   border: none;

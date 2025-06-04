@@ -1,6 +1,9 @@
 import Modal from "react-modal";
 import Flex from "../../components/Common/Flex";
 import styled from "styled-components";
+import EditSettingFormModal from "./Forms/EditSettingFormModal";
+import { useState } from "react";
+import { SettingItem } from "../../types/types";
 
 const StyledUl = styled.ul`
   list-style: none;
@@ -36,17 +39,17 @@ const StyledSettingItem = styled.li`
 
 const StyledTitleContainer = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   width: 100%;
-  padding: 1.25rem 1rem;
+  padding: 1rem 1rem;
   background-color: ${({ theme }) => theme.colors.darkPurple};
   border-bottom: 1px solid ${({ theme }) => theme.colors.darkPurple}cc;
 `;
 
 const StyledTitle = styled.h2`
   margin: 0;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   color: #fff;
   font-weight: 500;
 `;
@@ -73,45 +76,58 @@ const ModalStyles = {
 interface SettingModalProps {
   isOpen?: boolean;
   onRequestClose?: () => void;
+  settings?: SettingItem[];
   name: string;
 }
-
-const dummySettings = [
-  { id: 1, name: "Name", value: "Sweet Candle" },
-  { id: 2, name: "In Stock", value: 20 },
-  { id: 3, name: "Price", value: "$15.99" },
-  { id: 4, name: "Description", value: "A lovely scented candle." },
-  { id: 5, name: "Category", value: "Home Decor" },
-  { id: 6, name: "SKU", value: "CNDL-12345" },
-  { id: 7, name: "Identifier (ID)", value: "12345" },
-  { id: 8, name: "Image", value: "https://example.com/image.jpg" },
-];
 
 const SettingModal: React.FC<SettingModalProps> = ({
   name,
   isOpen = false,
+  settings,
   onRequestClose,
 }) => {
-  return (
-    <Modal isOpen={isOpen} style={ModalStyles} onRequestClose={onRequestClose}>
-      <StyledTitleContainer>
-        <StyledTitle>{name} Settings</StyledTitle>
-      </StyledTitleContainer>
+  const [isEditSettingOpen, setEditSettingOpen] = useState(false);
+  const [selectedSetting, setSelectedSetting] = useState<SettingItem | null>(
+    null
+  );
 
-      <Flex flexDirection="column" gap="0">
-        <StyledUl>
-          {dummySettings.map((setting) => (
-            <StyledSettingItem
-              key={setting.id}
-              onClick={() => alert(`Clicked on ${setting.name}`)}
-            >
-              {setting.name}
-              <span>{setting.value}</span>
-            </StyledSettingItem>
-          ))}
-        </StyledUl>
-      </Flex>
-    </Modal>
+  const handleEditSettingOpen = (setting: SettingItem) => {
+    setSelectedSetting(setting);
+    setEditSettingOpen(true);
+  };
+
+  const handleEditSettingClose = () => setEditSettingOpen(false);
+
+  return (
+    <>
+      <Modal
+        isOpen={isOpen}
+        style={ModalStyles}
+        onRequestClose={onRequestClose}
+      >
+        <StyledTitleContainer>
+          <StyledTitle>{name} settings</StyledTitle>
+        </StyledTitleContainer>
+        <Flex flexDirection="column">
+          <StyledUl>
+            {settings?.map((setting) => (
+              <StyledSettingItem
+                key={setting.name}
+                onClick={() => handleEditSettingOpen(setting)}
+              >
+                {setting.name}
+                <span>{setting.value}</span>
+              </StyledSettingItem>
+            ))}
+          </StyledUl>
+        </Flex>
+      </Modal>
+      <EditSettingFormModal
+        isOpen={isEditSettingOpen}
+        onRequestClose={handleEditSettingClose}
+        setting={selectedSetting}
+      />
+    </>
   );
 };
 

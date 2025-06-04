@@ -29,7 +29,7 @@ const Products = () => {
         <ProductCard
           id="1"
           area="card1"
-          title="Sweet candle"
+          title="Sweet Candle"
           price="12.00 zł"
           imageUrl={testCandle}
         />

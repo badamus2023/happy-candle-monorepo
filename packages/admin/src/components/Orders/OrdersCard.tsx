@@ -1,5 +1,8 @@
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
+import Flex from "../Common/Flex";
+import SettingModal from "../../containers/Setting/SettingModal";
+import { SettingItem } from "../../types/types";
 
 const Card = styled.div<{ area?: string }>`
   grid-area: ${({ area }) => area || "auto"};
@@ -44,6 +47,23 @@ const TotalAmount = styled.p`
   margin: 0.5rem 0;
 `;
 
+const ToggleButton = styled.button`
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  transition: transform 0.2s;
+
+  &:hover {
+    color: #bf7ca6;
+  }
+
+  &[aria-expanded="true"] {
+    transform: rotate(180deg);
+  }
+`;
+
 const StatusBadge = styled.span<{
   status: "Pending" | "Completed" | "Cancelled";
 }>`
@@ -65,51 +85,6 @@ const StatusBadge = styled.span<{
   align-self: flex-start;
 `;
 
-const ToggleButton = styled.button`
-  all: unset;
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  cursor: pointer;
-  font-size: 1.25rem;
-  transition: transform 0.2s;
-  &:hover {
-    color: #bf7ca6;
-  }
-  &[aria-expanded="true"] {
-    transform: rotate(180deg);
-  }
-`;
-
-const ActionsMenu = styled.div`
-  margin-top: 0.75rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-`;
-
-const MenuItem = styled.button<{ disabled?: boolean }>`
-  background-color: #3b82f6;
-  color: #fff;
-  border: none;
-  border-radius: 0.5rem;
-  padding: 0.6rem;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: background-color 0.2s;
-
-  &:hover:not([disabled]) {
-    background-color: #2563eb;
-  }
-
-  ${({ disabled }) =>
-    disabled &&
-    `
-    opacity: 0.5;
-    cursor: not-allowed;
-  `}
-`;
-
 export interface Action {
   label: string;
   onClick: () => void;
@@ -129,7 +104,6 @@ export interface OrderProps {
 }
 
 const OrderCard: React.FC<OrderProps> = ({
-  id,
   area,
   orderNumber,
   customerName,
@@ -137,68 +111,49 @@ const OrderCard: React.FC<OrderProps> = ({
   totalAmount,
   currency = "USD",
   status = "Pending",
-  actions,
 }) => {
-  const [expanded, setExpanded] = useState(false);
-  const toggle = useCallback(() => setExpanded((e) => !e), []);
-
   const formattedTotal = `${currency} ${totalAmount.toFixed(2)}`;
+  const [isModalOpen, setModalOpen] = useState(false);
 
-  const defaultActions: Action[] = [
-    { label: "View Details", onClick: () => console.log("view", id) },
-    {
-      label: status === "Pending" ? "Mark Complete" : "Reopen Order",
-      onClick: () => console.log("toggle status", id),
-    },
-    {
-      label: "Print Invoice",
-      onClick: () => console.log("print invoice", id),
-      disabled: status === "Cancelled",
-    },
-    {
-      label: "Cancel Order",
-      onClick: () => console.log("cancel", id),
-      disabled: status !== "Pending",
-    },
-  ];
+  const [settings, setSettings] = useState<SettingItem[]>([
+    { name: "Order Number", value: orderNumber, editable: true },
+    { name: "Customer Name", value: customerName, editable: true },
+    { name: "Order Date", value: orderDate, editable: true },
+    { name: "Total Amount", value: totalAmount, editable: true },
+    { name: "Currency", value: currency, editable: true },
+    { name: "Status", value: status, editable: true },
+  ]);
 
-  const menuActions = actions && actions.length > 0 ? actions : defaultActions;
+  const handleModalOpen = () => {
+    setModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setModalOpen(false);
+  };
 
   return (
-    <Card area={area}>
-      <OrderHeader>
-        <OrderNumber>Order #{orderNumber}</OrderNumber>
-        <CustomerName>Customer: {customerName}</CustomerName>
-        <OrderDate>Date: {orderDate}</OrderDate>
-      </OrderHeader>
+    <>
+      <Card area={area}>
+        <Flex justifyContent="flex-end" $alignItems="center">
+          <ToggleButton onClick={handleModalOpen}>...</ToggleButton>
+        </Flex>
+        <OrderHeader>
+          <OrderNumber>Order #{orderNumber}</OrderNumber>
+          <CustomerName>Customer: {customerName}</CustomerName>
+          <OrderDate>Date: {orderDate}</OrderDate>
+        </OrderHeader>
 
-      <TotalAmount>Total: {formattedTotal}</TotalAmount>
-      <StatusBadge status={status!}>{status}</StatusBadge>
-
-      <ToggleButton
-        onClick={toggle}
-        aria-expanded={expanded}
-        aria-controls={`order-actions-${id}`}
-        aria-label={expanded ? "Hide actions" : "Show actions"}
-      >
-        ↓
-      </ToggleButton>
-
-      {expanded && (
-        <ActionsMenu id={`order-actions-${id}`} role="menu">
-          {menuActions.map(({ label, onClick, disabled }) => (
-            <MenuItem
-              key={label}
-              onClick={onClick}
-              disabled={disabled}
-              role="menuitem"
-            >
-              {label}
-            </MenuItem>
-          ))}
-        </ActionsMenu>
-      )}
-    </Card>
+        <TotalAmount>Total: {formattedTotal}</TotalAmount>
+        <StatusBadge status={status!}>{status}</StatusBadge>
+      </Card>
+      <SettingModal
+        isOpen={isModalOpen}
+        onRequestClose={handleModalClose}
+        name={`Order #${orderNumber}`}
+        settings={settings}
+      />
+    </>
   );
 };
 

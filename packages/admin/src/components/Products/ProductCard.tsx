@@ -1,7 +1,8 @@
 import styled from "styled-components";
 import Flex from "../Common/Flex";
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import SettingModal from "../../containers/Setting/SettingModal";
+import { SettingItem } from "../../types/types";
 
 const Card = styled.div<{ area?: string }>`
   background-color: #ffffff;
@@ -76,7 +77,6 @@ export interface ProductProps {
 }
 
 const ProductCard: React.FC<ProductProps> = ({
-  id,
   area,
   title,
   price,
@@ -93,6 +93,13 @@ const ProductCard: React.FC<ProductProps> = ({
   const handleModalClose = () => {
     setModalOpen(false);
   };
+
+  const [settings, setSettings] = useState<SettingItem[]>([
+    { name: "Title", value: title, editable: true },
+    { name: "Price", value: price, editable: true },
+    { name: "In Stock", value: inStock, editable: true },
+    { name: "Image URL", value: imageUrl, editable: true },
+  ]);
 
   return (
     <>
@@ -116,6 +123,7 @@ const ProductCard: React.FC<ProductProps> = ({
       <SettingModal
         isOpen={isModalOpen}
         onRequestClose={handleModalClose}
+        settings={settings}
         name={title}
       />
     </>
