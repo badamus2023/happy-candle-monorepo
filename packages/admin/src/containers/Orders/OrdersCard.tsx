@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Flex from "../../components/Common/Flex";
 import SettingModal from "../Setting/SettingModal";
 import { SettingItem } from "../../types/types";
+import MenuButton from "../../components/Common/MenuButton";
 
 const Card = styled.div<{ area?: string }>`
   grid-area: ${({ area }) => area || "auto"};
@@ -47,23 +48,6 @@ const TotalAmount = styled.p`
   margin: 0.5rem 0;
 `;
 
-const ToggleButton = styled.button`
-  background: none;
-  border: none;
-  font-size: 1.25rem;
-  cursor: pointer;
-  padding: 0.5rem;
-  transition: transform 0.2s;
-
-  &:hover {
-    color: #bf7ca6;
-  }
-
-  &[aria-expanded="true"] {
-    transform: rotate(180deg);
-  }
-`;
-
 const StatusBadge = styled.span<{
   status: "Pending" | "Completed" | "Cancelled";
 }>`
@@ -85,12 +69,6 @@ const StatusBadge = styled.span<{
   align-self: flex-start;
 `;
 
-export interface Action {
-  label: string;
-  onClick: () => void;
-  disabled?: boolean;
-}
-
 export interface OrderProps {
   id: string;
   area?: string;
@@ -100,7 +78,6 @@ export interface OrderProps {
   totalAmount: number;
   currency?: string;
   status?: "Pending" | "Completed" | "Cancelled";
-  actions?: Action[];
 }
 
 const OrderCard: React.FC<OrderProps> = ({
@@ -136,7 +113,7 @@ const OrderCard: React.FC<OrderProps> = ({
     <>
       <Card area={area}>
         <Flex justifyContent="flex-end" $alignItems="center">
-          <ToggleButton onClick={handleModalOpen}>...</ToggleButton>
+          <MenuButton onClick={handleModalOpen}>...</MenuButton>
         </Flex>
         <OrderHeader>
           <OrderNumber>Order #{orderNumber}</OrderNumber>
