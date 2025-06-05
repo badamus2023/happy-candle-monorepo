@@ -2,10 +2,6 @@ import React, { useState, useEffect } from "react";
 import ReactModal from "react-modal";
 import styled from "styled-components";
 
-if (typeof window !== "undefined") {
-  ReactModal.setAppElement("#root");
-}
-
 export interface NewDiscount {
   code: string;
   type: "percentage" | "fixed";

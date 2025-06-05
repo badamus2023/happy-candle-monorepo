@@ -9,7 +9,9 @@
     "packages/*"
   ],
   "dependencies": {
-    "react-modal": "^3.16.3"
+    "@tanstack/react-form": "^1.12.1",
+    "react-modal": "^3.16.3",
+    "zod": "^3.25.51"
   },
   "devDependencies": {
     "@types/react-modal": "^3.16.3"

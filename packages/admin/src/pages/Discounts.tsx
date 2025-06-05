@@ -21,69 +21,70 @@ const DiscountsPage = () => {
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
 
+  const dummyDiscounts = [
+    {
+      id: "d001",
+      code: "SUMMER20",
+      description: "20% off all summer items",
+      type: "percentage" as const,
+      amount: 20,
+      expiryDate: "2025-08-31",
+      status: "Active" as const,
+    },
+    {
+      id: "d002",
+      code: "WELCOME10",
+      type: "fixed" as const,
+      amount: 10,
+      currency: "USD",
+      expiryDate: "2025-12-31",
+      status: "Active" as const,
+    },
+    {
+      id: "d003",
+      code: "FREESHIP",
+      description: "Free shipping on orders over $50",
+      type: "fixed" as const,
+      amount: 0,
+      expiryDate: "2025-06-30",
+      status: "Expired" as const,
+    },
+    {
+      id: "d004",
+      code: "BLACKFRIDAY",
+      type: "percentage" as const,
+      amount: 30,
+      expiryDate: "2025-11-29",
+      status: "Active" as const,
+    },
+    {
+      id: "d005",
+      code: "VIP50",
+      description: "50% for VIP members",
+      type: "percentage" as const,
+      amount: 50,
+      expiryDate: "2025-09-15",
+      status: "Active" as const,
+    },
+  ];
+
   return (
     <>
       <PageTitle title="Discounts" />
       <GridContainer>
-        <DiscountCard
-          id="d001"
-          code="SUMMER20"
-          description="20% off all summer items"
-          type="percentage"
-          amount={20}
-          expiryDate="2025-08-31"
-          status="Active"
-          actions={[
-            {
-              label: "Edit Discount",
-              onClick: () => alert("Edit Discount"),
-            },
-            {
-              label: "Delete Discount",
-              onClick: () => alert("Delete Discount"),
-            },
-            {
-              label: "Send to Customers",
-              onClick: () => alert("Sent to Customers"),
-            },
-          ]}
-        />
-        <DiscountCard
-          id="d002"
-          code="WELCOME10"
-          type="fixed"
-          amount={10}
-          currency="USD"
-          expiryDate="2025-12-31"
-          status="Active"
-        />
-        <DiscountCard
-          id="d003"
-          code="FREESHIP"
-          description="Free shipping on orders over $50"
-          type="fixed"
-          amount={0}
-          expiryDate="2025-06-30"
-          status="Expired"
-        />
-        <DiscountCard
-          id="d004"
-          code="BLACKFRIDAY"
-          type="percentage"
-          amount={30}
-          expiryDate="2025-11-29"
-          status="Active"
-        />
-        <DiscountCard
-          id="d005"
-          code="VIP50"
-          description="50% for VIP members"
-          type="percentage"
-          amount={50}
-          expiryDate="2025-09-15"
-          status="Active"
-          actions={[{ label: "Send to VIPs", onClick: () => alert("Sent!") }]}
-        />
+        {dummyDiscounts.map((discount) => (
+          <DiscountCard
+            key={discount.id}
+            id={discount.id}
+            code={discount.code}
+            description={discount.description}
+            type={discount.type}
+            amount={discount.amount}
+            currency={discount.currency}
+            expiryDate={discount.expiryDate}
+            status={discount.status}
+          />
+        ))}
       </GridContainer>
       <FloatingAddButton onClick={handleOpenModal} />
       <AddDiscountModal

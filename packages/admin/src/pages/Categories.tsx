@@ -21,53 +21,57 @@ const CategoriesPage = () => {
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
 
+  const dummyCategories = [
+    {
+      id: "cat1",
+      name: "Candles",
+      description: "All kinds of scented candles",
+      productCount: 24,
+    },
+    {
+      id: "cat2",
+      name: "Diffusers",
+      description: "No more allergy in your house",
+      productCount: 8,
+    },
+    {
+      id: "cat3",
+      name: "Soaps",
+      description: "Handmade organic soaps",
+      productCount: 15,
+    },
+    {
+      id: "cat4",
+      name: "Bath Bombs",
+      description: "Relaxing bath bombs with essential oils",
+      productCount: 12,
+    },
+    {
+      id: "cat5",
+      name: "Room Sprays",
+      description: "Handmade sprays to keep your room fresh",
+      productCount: 5,
+    },
+    {
+      id: "cat6",
+      name: "Gift Sets",
+      productCount: 3,
+    },
+  ];
+
   return (
     <>
       <PageTitle title="Categories" />
       <GridContainer>
-        <CategoryCard
-          id="cat1"
-          name="Candles"
-          description="All kinds of scented candles"
-          productCount={24}
-          actions={[
-            {
-              label: "View Products",
-              onClick: () => alert("View Products for Candles"),
-            },
-          ]}
-        />
-        <CategoryCard
-          id="cat2"
-          description="No more allergy in your house"
-          name="Diffusers"
-          productCount={8}
-        />
-        <CategoryCard
-          id="cat3"
-          name="Soaps"
-          description="Handmade organic soaps"
-          productCount={15}
-        />
-        <CategoryCard
-          id="cat4"
-          description="Relaxing bath bombs with essential oils"
-          name="Bath Bombs"
-          productCount={12}
-        />
-        <CategoryCard
-          id="cat5"
-          description="Handmade sprays to keep your room fresh"
-          name="Room Sprays"
-          productCount={5}
-        />
-        <CategoryCard id="cat6" name="Gift Sets" productCount={3} />
-        <CategoryCard
-          id="cat2"
-          description="No more allergy in your house"
-          name="Diffusers"
-          productCount={8}
-        />
+        {dummyCategories.map((category) => (
+          <CategoryCard
+            key={category.id}
+            id={category.id}
+            name={category.name}
+            description={category.description}
+            productCount={category.productCount}
+          />
+        ))}
       </GridContainer>
       <FloatingAddButton onClick={handleOpenModal} />
       <AddCategoryModal

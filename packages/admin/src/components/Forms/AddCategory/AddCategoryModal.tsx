@@ -1,10 +1,25 @@
-import React, { useState, useEffect } from "react";
-import ReactModal from "react-modal";
-import styled from "styled-components";
+import React, { useEffect } from "react";
+import StyledButton from "../../Common/Button";
+import { createFormHook, createFormHookContexts } from "@tanstack/react-form";
+import TextField from "../../Common/TextField";
+import TextArea from "../../Common/TextArea";
+import { z } from "zod";
+import Flex from "../../Common/Flex";
+import Modal from "../../Common/Modal";
 
-if (typeof window !== "undefined") {
-  ReactModal.setAppElement("#root");
-}
+const { fieldContext, formContext } = createFormHookContexts();
+
+const { useAppForm } = createFormHook({
+  fieldComponents: {
+    TextField,
+    TextArea,
+  },
+  formComponents: {
+    StyledButton,
+  },
+  fieldContext,
+  formContext,
+});
 
 export interface NewCategory {
   name: string;
@@ -18,168 +33,97 @@ interface AddCategoryModalProps {
   onSubmit: (category: NewCategory) => void;
 }
 
-const ModalStyles = {
-  overlay: {
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    zIndex: 1000,
-  },
-  content: {
-    top: "50%",
-    left: "50%",
-    right: "auto",
-    bottom: "auto",
-    transform: "translate(-50%, -50%)",
-    padding: "2rem",
-    borderRadius: "1rem",
-    width: "90%",
-    maxWidth: "30rem",
-  },
-};
-
-const Title = styled.h2`
-  margin: 0 0 1rem 0;
-  font-size: 1.5rem;
-  color: #2c2c2c;
-`;
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-`;
-
-const FormGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const Label = styled.label`
-  font-size: 0.9rem;
-  color: #5a5a75;
-  margin-bottom: 0.4rem;
-`;
-
-const Input = styled.input`
-  padding: 0.6rem 0.75rem;
-  border: 1px solid #d9d9e1;
-  border-radius: 4px;
-  font-size: 0.95rem;
-`;
-
-const TextArea = styled.textarea`
-  padding: 0.6rem 0.75rem;
-  border: 1px solid #d9d9e1;
-  border-radius: 4px;
-  font-size: 0.95rem;
-  resize: vertical;
-`;
-
-const ButtonRow = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.75rem;
-  margin-top: 1rem;
-`;
-
-const CancelButton = styled.button`
-  background: #e5e7eb;
-  color: #374151;
-  border: none;
-  border-radius: 0.5rem;
-  padding: 0.6rem 1.2rem;
-  cursor: pointer;
-  font-size: 0.95rem;
-  &:hover {
-    background: #d1d5db;
-  }
-`;
-
-const SubmitButton = styled.button`
-  background-color: #7c3aed;
-  color: #fff;
-  border: none;
-  border-radius: 0.5rem;
-  padding: 0.6rem 1.2rem;
-  cursor: pointer;
-  font-size: 0.95rem;
-  &:hover {
-    background-color: #6b21a8;
-  }
-`;
-
 const AddCategoryModal: React.FC<AddCategoryModalProps> = ({
   isOpen,
   onRequestClose,
   onSubmit,
 }) => {
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
-
-  useEffect(() => {
-    if (!isOpen) {
-      setName("");
-      setDescription("");
-      setImageUrl("");
-    }
-  }, [isOpen]);
+  const form = useAppForm({
+    defaultValues: {
+      name: "",
+      description: "",
+      imageUrl: "",
+    },
+    validators: {
+      onChange: z.object({
+        name: z.string().min(1, "Name is required"),
+        description: z.string(),
+        imageUrl: z.string(),
+      }),
+    },
+    onSubmit: ({ value }) => {
+      alert(JSON.stringify(value, null, 2));
+      onRequestClose();
+    },
+  });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit({ name, description, imageUrl });
+    form.handleSubmit();
     onRequestClose();
   };
 
+  useEffect(() => {
+    if (isOpen) {
+      form.reset();
+    }
+  }, [isOpen, form]);
+
   return (
-    <ReactModal
+    <Modal
       isOpen={isOpen}
       onRequestClose={onRequestClose}
-      style={ModalStyles}
-      contentLabel="Add Category"
-      shouldCloseOnOverlayClick={true}
+      title={"Add New Category"}
     >
-      <Title>Add New Category</Title>
-
-      <Form onSubmit={handleSubmit}>
-        <FormGroup>
-          <Label htmlFor="category-name">Name</Label>
-          <Input
-            id="category-name"
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-        </FormGroup>
-
-        <FormGroup>
-          <Label htmlFor="category-description">Description</Label>
-          <TextArea
-            id="category-description"
-            rows={3}
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-        </FormGroup>
-
-        <FormGroup>
-          <Label htmlFor="category-imageUrl">Image URL</Label>
-          <Input
-            id="category-imageUrl"
-            type="text"
-            placeholder="https://..."
-            value={imageUrl}
-            onChange={(e) => setImageUrl(e.target.value)}
-          />
-        </FormGroup>
-
-        <ButtonRow>
-          <CancelButton type="button" onClick={onRequestClose}>
-            Cancel
-          </CancelButton>
-          <SubmitButton type="submit">Add Category</SubmitButton>
-        </ButtonRow>
-      </Form>
-    </ReactModal>
+      <form onSubmit={handleSubmit}>
+        <Flex flexDirection="column" gap="1rem">
+          <Flex flexDirection="column">
+            <form.AppField
+              name="name"
+              children={(field) => (
+                <field.TextField
+                  label="Name"
+                  onChange={(e) => field.handleChange(e.target.value)}
+                />
+              )}
+            />
+          </Flex>
+          <Flex flexDirection="column">
+            <form.AppField
+              name="description"
+              children={(field) => (
+                <field.TextArea
+                  label="Description"
+                  rows={4}
+                  placeholder="Enter category description"
+                  onChange={(e) => field.handleChange(e.target.value)}
+                />
+              )}
+            />
+          </Flex>
+          <Flex flexDirection="column">
+            <form.AppField
+              name="imageUrl"
+              children={(field) => (
+                <field.TextField
+                  label="Image URL"
+                  placeholder="Enter image URL"
+                  onChange={(e) => field.handleChange(e.target.value)}
+                />
+              )}
+            />
+          </Flex>
+          <Flex justifyContent="flex-end" gap="0.75rem" mt>
+            <form.AppForm>
+              <form.StyledButton type="submit">Save</form.StyledButton>
+              <form.StyledButton type="reset" onClick={onRequestClose}>
+                Cancel
+              </form.StyledButton>
+            </form.AppForm>
+          </Flex>
+        </Flex>
+      </form>
+    </Modal>
   );
 };
 

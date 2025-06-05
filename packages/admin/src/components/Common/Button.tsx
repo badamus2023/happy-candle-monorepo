@@ -2,7 +2,9 @@ import styled from "styled-components";
 
 interface StyledButtonInterface
   extends React.HTMLAttributes<HTMLButtonElement> {
+  type?: "button" | "submit" | "reset";
   children?: React.ReactNode;
+  disabled?: boolean;
   borderRadius?: string;
   bgc?: string;
   color?: string;
@@ -36,7 +38,11 @@ const StyledButton: React.FC<StyledButtonInterface> = ({
   children,
   ...props
 }) => {
-  return <Button {...props}>{children}</Button>;
+  return (
+    <Button type={props.type} {...props} disabled={props.disabled}>
+      {children}
+    </Button>
+  );
 };
 
 export default StyledButton;
