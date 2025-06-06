@@ -10,14 +10,6 @@ const SettingsContainer = styled.div`
   gap: 1rem;
 `;
 
-const SettingsSection = styled.div`
-  background-color: #ffffff;
-  width: fit-content;
-  border-radius: 1rem;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-  padding: 1.5rem;
-`;
-
 const FormGroup = styled.div`
   margin-bottom: 1rem;
   margin-top: 0.5rem;
@@ -25,6 +17,23 @@ const FormGroup = styled.div`
   gap: 0.5rem;
   display: flex;
   flex-direction: column;
+`;
+
+const ToggleRow = styled.div`
+  display: flex;
+  margin-top: 0.5rem;
+  padding: 0.1rem;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+`;
+
+const SettingsSection = styled.div`
+  background-color: #ffffff;
+  width: fit-content;
+  border-radius: 1rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  padding: 1.5rem;
 `;
 
 const Label = styled.label`
@@ -45,15 +54,6 @@ const Select = styled.select`
   border: 1px solid #d9d9e1;
   border-radius: 4px;
   font-size: 0.95rem;
-`;
-
-const ToggleRow = styled.div`
-  display: flex;
-  margin-top: 0.5rem;
-  padding: 0.1rem;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1rem;
 `;
 
 const Button = styled.button`

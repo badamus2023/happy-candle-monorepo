@@ -1,6 +1,25 @@
 import React, { useState, useEffect } from "react";
-import ReactModal from "react-modal";
 import styled from "styled-components";
+import TextField from "../../Common/TextField";
+import Flex from "../../Common/Flex";
+import TextArea from "../../Common/TextArea";
+import StyledButton from "../../Common/Button";
+import { createFormHook, createFormHookContexts } from "@tanstack/react-form";
+import Modal from "../../Common/Modal";
+
+const { fieldContext, formContext } = createFormHookContexts();
+
+const { useAppForm } = createFormHook({
+  fieldComponents: {
+    TextField,
+    TextArea,
+  },
+  formComponents: {
+    StyledButton,
+  },
+  fieldContext,
+  formContext,
+});
 
 export interface NewDiscount {
   code: string;
@@ -17,54 +36,6 @@ interface AddDiscountModalProps {
   onSubmit: (discount: NewDiscount) => void;
 }
 
-const ModalStyles = {
-  overlay: {
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    zIndex: 1000,
-  },
-  content: {
-    top: "50%",
-    left: "50%",
-    right: "auto",
-    bottom: "auto",
-    transform: "translate(-50%, -50%)",
-    padding: "2rem",
-    borderRadius: "1rem",
-    width: "90%",
-    maxWidth: "30rem",
-  },
-};
-
-const Title = styled.h2`
-  margin: 0 0 1rem 0;
-  font-size: 1.5rem;
-  color: #2c2c2c;
-`;
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-`;
-
-const FormGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const Label = styled.label`
-  font-size: 0.9rem;
-  color: #5a5a75;
-  margin-bottom: 0.4rem;
-`;
-
-const Input = styled.input`
-  padding: 0.6rem 0.75rem;
-  border: 1px solid #d9d9e1;
-  border-radius: 4px;
-  font-size: 0.95rem;
-`;
-
 const Select = styled.select`
   padding: 0.6rem 0.75rem;
   border: 1px solid #d9d9e1;
@@ -72,99 +43,55 @@ const Select = styled.select`
   font-size: 0.95rem;
 `;
 
-const TextArea = styled.textarea`
-  padding: 0.6rem 0.75rem;
-  border: 1px solid #d9d9e1;
-  border-radius: 4px;
-  font-size: 0.95rem;
-  resize: vertical;
-`;
-
-const ButtonRow = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.75rem;
-  margin-top: 1rem;
-`;
-
-const CancelButton = styled.button`
-  background: #e5e7eb;
-  color: #374151;
-  border: none;
-  border-radius: 0.5rem;
-  padding: 0.6rem 1.2rem;
-  cursor: pointer;
-  font-size: 0.95rem;
-  &:hover {
-    background: #d1d5db;
-  }
-`;
-
-const SubmitButton = styled.button`
-  background-color: #16a34a;
-  color: #fff;
-  border: none;
-  border-radius: 0.5rem;
-  padding: 0.6rem 1.2rem;
-  cursor: pointer;
-  font-size: 0.95rem;
-  &:hover {
-    background-color: #15803d;
-  }
-`;
-
 const AddDiscountModal: React.FC<AddDiscountModalProps> = ({
   isOpen,
   onRequestClose,
   onSubmit,
 }) => {
-  const [code, setCode] = useState("");
-  const [type, setType] = useState<"percentage" | "fixed">("percentage");
-  const [amount, setAmount] = useState("");
-  const [currency, setCurrency] = useState("USD");
-  const [expiryDate, setExpiryDate] = useState("");
-  const [description, setDescription] = useState("");
+  const form = useAppForm({
+    defaultValues: {
+      code: "",
+      type: "percentage",
+      amount: "",
+      currency: "USD",
+      expiryDate: "",
+      description: "",
+    },
+    onSubmit: ({ value }) => {
+      alert(JSON.stringify(value, null, 2));
+      onRequestClose();
+    },
+  });
 
-  useEffect(() => {
-    if (!isOpen) {
-      setCode("");
-      setType("percentage");
-      setAmount("");
-      setCurrency("USD");
-      setExpiryDate("");
-      setDescription("");
-    }
-  }, [isOpen]);
+  const [type, setType] = useState<"percentage" | "fixed">("percentage");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit({ code, type, amount, currency, expiryDate, description });
+    form.handleSubmit();
     onRequestClose();
   };
 
   return (
-    <ReactModal
+    <Modal
       isOpen={isOpen}
       onRequestClose={onRequestClose}
-      style={ModalStyles}
-      contentLabel="Add Discount"
-      shouldCloseOnOverlayClick={true}
+      title="Add New Discount"
     >
-      <Title>Add New Discount</Title>
-
-      <Form onSubmit={handleSubmit}>
-        <FormGroup>
-          <Label htmlFor="discount-code">Code</Label>
-          <Input
-            id="discount-code"
-            type="text"
-            value={code}
-            onChange={(e) => setCode(e.target.value)}
+      <form onSubmit={handleSubmit}>
+        <Flex flexDirection="column" gap="1rem">
+          <form.AppField
+            name="code"
+            children={(field) => (
+              <field.TextField
+                label="Code"
+                onChange={(e) => field.handleChange(e.target.value)}
+              />
+            )}
           />
-        </FormGroup>
+        </Flex>
 
-        <FormGroup>
-          <Label htmlFor="discount-type">Type</Label>
+        <Flex flexDirection="column" gap="1rem">
+          {/* <Label htmlFor="discount-type">Type</Label> */}
           <Select
             id="discount-type"
             value={type}
@@ -173,60 +100,68 @@ const AddDiscountModal: React.FC<AddDiscountModalProps> = ({
             <option value="percentage">Percentage</option>
             <option value="fixed">Fixed Amount</option>
           </Select>
-        </FormGroup>
+        </Flex>
 
-        <FormGroup>
-          <Label htmlFor="discount-amount">Amount</Label>
-          <Input
-            id="discount-amount"
-            type="text"
-            placeholder={type === "percentage" ? "e.g. 20" : "e.g. 10.00"}
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
+        <Flex flexDirection="column" gap="1rem">
+          <form.AppField
+            name="amount"
+            children={(field) => (
+              <field.TextField
+                label="Amount"
+                onChange={(e) => field.handleChange(e.target.value)}
+              />
+            )}
           />
-        </FormGroup>
+        </Flex>
 
         {type === "fixed" && (
-          <FormGroup>
-            <Label htmlFor="discount-currency">Currency</Label>
-            <Input
-              id="discount-currency"
-              type="text"
-              value={currency}
-              onChange={(e) => setCurrency(e.target.value)}
+          <Flex flexDirection="column" gap="1rem">
+            <form.AppField
+              name="currency"
+              children={(field) => (
+                <field.TextField
+                  label="Currency"
+                  onChange={(e) => field.handleChange(e.target.value)}
+                />
+              )}
             />
-          </FormGroup>
+          </Flex>
         )}
 
-        <FormGroup>
-          <Label htmlFor="discount-expiry">Expiry Date</Label>
-          <Input
-            id="discount-expiry"
-            type="text"
-            placeholder="YYYY-MM-DD"
-            value={expiryDate}
-            onChange={(e) => setExpiryDate(e.target.value)}
+        <Flex flexDirection="column" gap="1rem">
+          <form.AppField
+            name="expiryDate"
+            children={(field) => (
+              <field.TextField
+                label="Expiry Date"
+                onChange={(e) => field.handleChange(e.target.value)}
+              />
+            )}
           />
-        </FormGroup>
+        </Flex>
 
-        <FormGroup>
-          <Label htmlFor="discount-description">Description</Label>
-          <TextArea
-            id="discount-description"
-            rows={3}
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+        <Flex flexDirection="column" gap="1rem">
+          <form.AppField
+            name="description"
+            children={(field) => (
+              <field.TextField
+                label="Description"
+                onChange={(e) => field.handleChange(e.target.value)}
+              />
+            )}
           />
-        </FormGroup>
+        </Flex>
 
-        <ButtonRow>
-          <CancelButton type="button" onClick={onRequestClose}>
-            Cancel
-          </CancelButton>
-          <SubmitButton type="submit">Add Discount</SubmitButton>
-        </ButtonRow>
-      </Form>
-    </ReactModal>
+        <Flex justifyContent="flex-end" gap="0.75rem" mt="1rem">
+          <form.AppForm>
+            <form.StyledButton type="submit">Save</form.StyledButton>
+            <form.StyledButton type="reset" onClick={onRequestClose}>
+              Cancel
+            </form.StyledButton>
+          </form.AppForm>
+        </Flex>
+      </form>
+    </Modal>
   );
 };
 
