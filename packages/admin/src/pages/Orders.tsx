@@ -75,21 +75,6 @@ const OrdersPage = () => {
             totalAmount={order.totalAmount}
             currency={order.currency}
             status={order.status}
-            actions={[
-              {
-                label: "View Details",
-                onClick: () => console.log("View Details", order.id),
-              },
-              {
-                label: "Edit Order",
-                onClick: () => console.log("Edit Order", order.id),
-              },
-              {
-                label: "Cancel Order",
-                onClick: () => console.log("Cancel Order", order.id),
-                disabled: order.status !== "Pending",
-              },
-            ]}
           />
         ))}
       </GridContainer>

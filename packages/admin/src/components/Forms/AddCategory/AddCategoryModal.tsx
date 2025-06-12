@@ -1,6 +1,11 @@
 import React, { useEffect } from "react";
 import StyledButton from "../../Common/Button";
-import { createFormHook, createFormHookContexts } from "@tanstack/react-form";
+import {
+  AnyFieldApi,
+  createFormHook,
+  createFormHookContexts,
+  FieldApi,
+} from "@tanstack/react-form";
 import TextField from "../../Common/TextField";
 import TextArea from "../../Common/TextArea";
 import { z } from "zod";
@@ -46,7 +51,10 @@ const AddCategoryModal: React.FC<AddCategoryModalProps> = ({
     },
     validators: {
       onChange: z.object({
-        name: z.string().min(1, "Name is required"),
+        name: z
+          .string()
+          .min(1, "Name is required")
+          .min(3, "Name must be at least 3 characters"),
         description: z.string(),
         imageUrl: z.string(),
       }),
@@ -56,6 +64,13 @@ const AddCategoryModal: React.FC<AddCategoryModalProps> = ({
       onRequestClose();
     },
   });
+
+  const getFirstError = (field: AnyFieldApi) => {
+    if (field.getMeta().errors.length > 0) {
+      return field.getMeta().errors[0].message;
+    }
+    return "";
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -83,6 +98,7 @@ const AddCategoryModal: React.FC<AddCategoryModalProps> = ({
               children={(field) => (
                 <field.TextField
                   label="Name"
+                  error={getFirstError(field)}
                   onChange={(e) => field.handleChange(e.target.value)}
                 />
               )}

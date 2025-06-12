@@ -8,10 +8,10 @@ const Label = styled.label`
   margin-bottom: 0.4rem;
 `;
 
-const Input = styled.input`
+const Input = styled.input<{ hasError?: boolean }>`
   width: 100%;
   padding: 0.6rem 0.75rem;
-  border: 1px solid #d9d9e1;
+  border: 1px solid ${({ hasError }) => (hasError ? "#e74c3c" : "#d9d9e1")};
   border-radius: 4px;
   font-size: 0.95rem;
 
@@ -22,31 +22,37 @@ const Input = styled.input`
   }
 `;
 
+const ErrorText = styled.div`
+  margin-top: 0.25rem;
+  font-size: 0.8rem;
+  color: #e74c3c;
+`;
+
 interface TextFieldProps {
   label: string;
+  error?: string;
   id?: string;
   name?: string;
   placeholder?: string;
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   required?: boolean;
-  className?: string;
   type?: string;
 }
 
 const TextField: React.FC<TextFieldProps> = ({
   label,
+  error,
   id = "text-field",
   name = "text-field",
   placeholder = "",
   value,
   onChange,
   required = false,
-  className,
   type = "text",
 }) => {
   return (
-    <div className={className}>
+    <>
       <Label htmlFor={id}>
         {label}
         {required && " *"}
@@ -54,13 +60,15 @@ const TextField: React.FC<TextFieldProps> = ({
       <Input
         type={type}
         id={id}
+        hasError={!!error}
         name={name}
         placeholder={placeholder}
         value={value}
         onChange={onChange}
         required={required}
       />
-    </div>
+      {error && <ErrorText>{error}</ErrorText>}
+    </>
   );
 };
 
