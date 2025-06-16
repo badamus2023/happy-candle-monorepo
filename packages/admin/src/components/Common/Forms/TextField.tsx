@@ -1,12 +1,8 @@
 import React from "react";
+import Label from "./Label";
 import styled from "styled-components";
-
-const Label = styled.label`
-  display: block;
-  font-size: 0.9rem;
-  color: #5a5a75;
-  margin-bottom: 0.4rem;
-`;
+import FieldError from "./FieldError";
+import Flex from "../Flex";
 
 const Input = styled.input<{ hasError?: boolean }>`
   width: 100%;
@@ -20,12 +16,6 @@ const Input = styled.input<{ hasError?: boolean }>`
     border-color: #7a7ae5;
     box-shadow: 0 0 0 2px rgba(122, 122, 229, 0.2);
   }
-`;
-
-const ErrorText = styled.div`
-  margin-top: 0.25rem;
-  font-size: 0.8rem;
-  color: #e74c3c;
 `;
 
 interface TextFieldProps {
@@ -52,8 +42,8 @@ const TextField: React.FC<TextFieldProps> = ({
   type = "text",
 }) => {
   return (
-    <>
-      <Label htmlFor={id}>
+    <Flex flexDirection="column">
+      <Label>
         {label}
         {required && " *"}
       </Label>
@@ -67,8 +57,8 @@ const TextField: React.FC<TextFieldProps> = ({
         onChange={onChange}
         required={required}
       />
-      {error && <ErrorText>{error}</ErrorText>}
-    </>
+      {error && <FieldError error={error}></FieldError>}
+    </Flex>
   );
 };
 

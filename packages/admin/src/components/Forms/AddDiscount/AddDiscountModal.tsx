@@ -1,11 +1,17 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import TextField from "../../Common/TextField";
+import React, { useState } from "react";
+import TextField from "../../Common/Forms/TextField";
 import Flex from "../../Common/Flex";
-import TextArea from "../../Common/TextArea";
+import TextArea from "../../Common/Forms/TextArea";
 import StyledButton from "../../Common/Button";
-import { createFormHook, createFormHookContexts } from "@tanstack/react-form";
+import {
+  createFormHook,
+  createFormHookContexts,
+  useStore,
+} from "@tanstack/react-form";
 import Modal from "../../Common/Modal";
+import { discountSchema } from "../Schemas/DiscountSchema";
+import { getFirstError } from "../../../utils";
+import Select from "../../Common/Forms/Select";
 
 const { fieldContext, formContext } = createFormHookContexts();
 
@@ -13,6 +19,7 @@ const { useAppForm } = createFormHook({
   fieldComponents: {
     TextField,
     TextArea,
+    Select,
   },
   formComponents: {
     StyledButton,
@@ -24,10 +31,11 @@ const { useAppForm } = createFormHook({
 export interface NewDiscount {
   code: string;
   type: "percentage" | "fixed";
-  amount: string;
+  amount: number;
   currency: string;
   expiryDate: string;
   description: string;
+  status?: "Active" | "Expired";
 }
 
 interface AddDiscountModalProps {
@@ -35,13 +43,6 @@ interface AddDiscountModalProps {
   onRequestClose: () => void;
   onSubmit: (discount: NewDiscount) => void;
 }
-
-const Select = styled.select`
-  padding: 0.6rem 0.75rem;
-  border: 1px solid #d9d9e1;
-  border-radius: 4px;
-  font-size: 0.95rem;
-`;
 
 const AddDiscountModal: React.FC<AddDiscountModalProps> = ({
   isOpen,
@@ -52,13 +53,19 @@ const AddDiscountModal: React.FC<AddDiscountModalProps> = ({
     defaultValues: {
       code: "",
       type: "percentage",
-      amount: "",
+      amount: 0,
       currency: "USD",
       expiryDate: "",
       description: "",
     },
+    validators: {
+      onChange: discountSchema,
+    },
     onSubmit: ({ value }) => {
-      alert(JSON.stringify(value, null, 2));
+      onSubmit({
+        ...value,
+        type: value.type === "percentage" ? "percentage" : "fixed",
+      });
       onRequestClose();
     },
   });
@@ -70,6 +77,8 @@ const AddDiscountModal: React.FC<AddDiscountModalProps> = ({
     form.handleSubmit();
     onRequestClose();
   };
+
+  const canSubmit = useStore(form.store, (s) => s.canSubmit && s.isDirty);
 
   return (
     <Modal
@@ -84,6 +93,7 @@ const AddDiscountModal: React.FC<AddDiscountModalProps> = ({
               name="code"
               children={(field) => (
                 <field.TextField
+                  error={getFirstError(field)}
                   label="Code"
                   onChange={(e) => field.handleChange(e.target.value)}
                 />
@@ -92,17 +102,20 @@ const AddDiscountModal: React.FC<AddDiscountModalProps> = ({
           </Flex>
 
           <Flex flexDirection="column" gap="1rem">
-            {/* <Label htmlFor="discount-type">Type</Label> */}
-            <Select
-              id="discount-type"
-              value={type}
-              onChange={(e) =>
-                setType(e.target.value as "percentage" | "fixed")
-              }
-            >
-              <option value="percentage">Percentage</option>
-              <option value="fixed">Fixed Amount</option>
-            </Select>
+            <form.AppField
+              name="type"
+              children={(field) => (
+                <field.Select<"percentage" | "fixed">
+                  label="Type"
+                  values={["percentage", "fixed"]}
+                  onChange={(e) => {
+                    const v = e.target.value as NewDiscount["type"];
+                    field.handleChange(v);
+                    setType(v);
+                  }}
+                />
+              )}
+            />
           </Flex>
 
           <Flex flexDirection="column" gap="1rem">
@@ -110,8 +123,9 @@ const AddDiscountModal: React.FC<AddDiscountModalProps> = ({
               name="amount"
               children={(field) => (
                 <field.TextField
+                  error={getFirstError(field)}
                   label="Amount"
-                  onChange={(e) => field.handleChange(e.target.value)}
+                  onChange={(e) => field.handleChange(parseInt(e.target.value))}
                 />
               )}
             />
@@ -123,6 +137,7 @@ const AddDiscountModal: React.FC<AddDiscountModalProps> = ({
                 name="currency"
                 children={(field) => (
                   <field.TextField
+                    error={getFirstError(field)}
                     label="Currency"
                     onChange={(e) => field.handleChange(e.target.value)}
                   />
@@ -136,6 +151,7 @@ const AddDiscountModal: React.FC<AddDiscountModalProps> = ({
               name="expiryDate"
               children={(field) => (
                 <field.TextField
+                  error={getFirstError(field)}
                   label="Expiry Date"
                   onChange={(e) => field.handleChange(e.target.value)}
                 />
@@ -148,6 +164,7 @@ const AddDiscountModal: React.FC<AddDiscountModalProps> = ({
               name="description"
               children={(field) => (
                 <field.TextField
+                  error={getFirstError(field)}
                   label="Description"
                   onChange={(e) => field.handleChange(e.target.value)}
                 />
@@ -157,7 +174,9 @@ const AddDiscountModal: React.FC<AddDiscountModalProps> = ({
 
           <Flex justifyContent="flex-end" gap="0.75rem" mt="1rem">
             <form.AppForm>
-              <form.StyledButton type="submit">Save</form.StyledButton>
+              <form.StyledButton type="submit" disabled={!canSubmit}>
+                Save
+              </form.StyledButton>
               <form.StyledButton type="reset" onClick={onRequestClose}>
                 Cancel
               </form.StyledButton>

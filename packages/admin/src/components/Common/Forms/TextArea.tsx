@@ -1,17 +1,13 @@
 import React from "react";
 import styled from "styled-components";
+import Label from "./Label";
+import FieldError from "./FieldError";
+import Flex from "../Flex";
 
-const Label = styled.label`
-  display: block;
-  font-size: 0.9rem;
-  color: #5a5a75;
-  margin-bottom: 0.4rem;
-`;
-
-const TextAreaStyled = styled.textarea`
+const TextAreaStyled = styled.textarea<{ hasError?: boolean }>`
   width: 100%;
   padding: 0.6rem 0.75rem;
-  border: 1px solid #d9d9e1;
+  border: 1px solid ${({ hasError }) => (hasError ? "#e74c3c" : "#d9d9e1")};
   border-radius: 4px;
   font-size: 0.95rem;
   resize: vertical;
@@ -26,6 +22,7 @@ const TextAreaStyled = styled.textarea`
 
 interface TextAreaProps {
   label: string;
+  error?: string;
   id?: string;
   name?: string;
   placeholder?: string;
@@ -37,6 +34,7 @@ interface TextAreaProps {
 
 const TextArea: React.FC<TextAreaProps> = ({
   label,
+  error,
   id = "text-area",
   name = "text-area",
   placeholder = "",
@@ -46,13 +44,14 @@ const TextArea: React.FC<TextAreaProps> = ({
   rows = 4,
 }) => {
   return (
-    <>
-      <Label htmlFor={id}>
+    <Flex flexDirection="column">
+      <Label>
         {label}
         {required && " *"}
       </Label>
       <TextAreaStyled
         id={id}
+        hasError={!!error}
         name={name}
         placeholder={placeholder}
         value={value}
@@ -60,7 +59,8 @@ const TextArea: React.FC<TextAreaProps> = ({
         required={required}
         rows={rows}
       />
-    </>
+      {error && <FieldError error={error}></FieldError>}
+    </Flex>
   );
 };
 

@@ -1,16 +1,16 @@
 import React, { useEffect } from "react";
 import StyledButton from "../../Common/Button";
 import {
-  AnyFieldApi,
   createFormHook,
   createFormHookContexts,
-  FieldApi,
+  useStore,
 } from "@tanstack/react-form";
-import TextField from "../../Common/TextField";
-import TextArea from "../../Common/TextArea";
-import { z } from "zod";
+import TextField from "../../Common/Forms/TextField";
+import TextArea from "../../Common/Forms/TextArea";
 import Flex from "../../Common/Flex";
 import Modal from "../../Common/Modal";
+import { categorySchema } from "../Schemas/CategorySchema";
+import { getFirstError } from "../../../utils";
 
 const { fieldContext, formContext } = createFormHookContexts();
 
@@ -50,27 +50,13 @@ const AddCategoryModal: React.FC<AddCategoryModalProps> = ({
       imageUrl: "",
     },
     validators: {
-      onChange: z.object({
-        name: z
-          .string()
-          .min(1, "Name is required")
-          .min(3, "Name must be at least 3 characters"),
-        description: z.string(),
-        imageUrl: z.string(),
-      }),
+      onChange: categorySchema,
     },
     onSubmit: ({ value }) => {
-      alert(JSON.stringify(value, null, 2));
+      onSubmit(value);
       onRequestClose();
     },
   });
-
-  const getFirstError = (field: AnyFieldApi) => {
-    if (field.getMeta().errors.length > 0) {
-      return field.getMeta().errors[0].message;
-    }
-    return "";
-  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -83,6 +69,8 @@ const AddCategoryModal: React.FC<AddCategoryModalProps> = ({
       form.reset();
     }
   }, [isOpen, form]);
+
+  const canSubmit = useStore(form.store, (s) => s.canSubmit && s.isDirty);
 
   return (
     <Modal
@@ -111,6 +99,7 @@ const AddCategoryModal: React.FC<AddCategoryModalProps> = ({
                 <field.TextArea
                   label="Description"
                   rows={4}
+                  error={getFirstError(field)}
                   placeholder="Enter category description"
                   onChange={(e) => field.handleChange(e.target.value)}
                 />
@@ -123,6 +112,7 @@ const AddCategoryModal: React.FC<AddCategoryModalProps> = ({
               children={(field) => (
                 <field.TextField
                   label="Image URL"
+                  error={getFirstError(field)}
                   placeholder="Enter image URL"
                   onChange={(e) => field.handleChange(e.target.value)}
                 />
@@ -131,7 +121,9 @@ const AddCategoryModal: React.FC<AddCategoryModalProps> = ({
           </Flex>
           <Flex justifyContent="flex-end" gap="0.75rem" mt>
             <form.AppForm>
-              <form.StyledButton type="submit">Save</form.StyledButton>
+              <form.StyledButton disabled={!canSubmit} type="submit">
+                Save
+              </form.StyledButton>
               <form.StyledButton type="reset" onClick={onRequestClose}>
                 Cancel
               </form.StyledButton>
