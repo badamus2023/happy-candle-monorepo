@@ -61,7 +61,6 @@ export interface Action {
 }
 
 export interface DiscountProps {
-  id: string;
   area?: string;
   code: string;
   description?: string;

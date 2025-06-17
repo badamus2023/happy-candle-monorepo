@@ -17,7 +17,8 @@ const Button = styled.button<StyledButtonInterface>`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: ${({ bgc }) => bgc || "#bf7ca6"};
+  background-color: ${({ disabled, bgc }) =>
+    disabled ? "#ccc" : bgc || "#bf7ca6"};
   width: ${({ wd }) => wd || "100%"};
   color: #ffffff;
   border: none;
@@ -25,12 +26,11 @@ const Button = styled.button<StyledButtonInterface>`
   padding: 0.5rem 1rem;
   font-size: 1rem;
   font-weight: 500;
-
-  cursor: pointer;
+  cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
   transition: background-color 0.3s;
 
   &:hover {
-    background-color: #a05a8d;
+    background-color: ${({ disabled }) => (disabled ? "#ccc" : "#a05a8d")};
   }
 `;
 

@@ -3,7 +3,9 @@ import ProductCard from "../containers/Products/ProductCard";
 import testCandle from "../assets/test-candle.jpg";
 import FloatingAddButton from "../components/Common/FloatingAddButton";
 import PageTitle from "../components/Common/PageTitle";
-import AddProductModal from "../components/Forms/AddProduct/AddProductModal";
+import AddProductModal, {
+  NewProduct,
+} from "../components/Forms/AddProduct/AddProductModal";
 import { useState } from "react";
 
 const GridContainer = styled.div`
@@ -19,54 +21,60 @@ const GridContainer = styled.div`
 const Products = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleOpenModal = () => setIsModalOpen(true);
-  const handleCloseModal = () => setIsModalOpen(false);
-
-  const dummyProducts = [
+  const dummyProducts: NewProduct[] = [
     {
-      id: "p001",
-      area: "card1",
       title: "Sweet Candle",
       price: "12.00 zł",
       imageUrl: testCandle,
+      inStock: "10",
+      category: "Candles",
+      sku: "SKU12345",
     },
     {
-      id: "p002",
-      area: "card2",
       title: "Red Lipstick Candy",
       price: "7.00 zł",
       imageUrl: testCandle,
+      inStock: "10",
+      category: "Candies",
+      sku: "SKU67890",
     },
     {
-      id: "p003",
-      area: "card3",
       title: "Iron Man Candy",
       price: "17.00 zł",
-      inStock: 5,
+      inStock: "5",
+      category: "Candies",
+      sku: "SKU54321",
       imageUrl: testCandle,
     },
     {
-      id: "p004",
-      area: "card4",
       title: "Batman Candy",
       price: "14.00 zł",
+      inStock: "8",
+      category: "Candies",
+      sku: "SKU98765",
       imageUrl: testCandle,
     },
   ];
+  const [products, setProducts] = useState(dummyProducts);
+
+  const handleOpenModal = () => setIsModalOpen(true);
+  const handleCloseModal = () => setIsModalOpen(false);
+
+  const handleAddProduct = (newProduct: NewProduct) => {
+    setProducts((prevProducts) => [...prevProducts, newProduct]);
+    handleCloseModal();
+  };
 
   return (
     <>
       <PageTitle title="Products" />
       <GridContainer>
-        {dummyProducts.map((product) => (
+        {products.map((product) => (
           <ProductCard
-            key={product.id}
-            id={product.id}
-            area={product.area}
             title={product.title}
             price={product.price}
             imageUrl={product.imageUrl}
-            inStock={product.inStock}
+            inStock={parseInt(product.inStock)}
           />
         ))}
       </GridContainer>
@@ -74,7 +82,7 @@ const Products = () => {
       <AddProductModal
         isOpen={isModalOpen}
         onRequestClose={handleCloseModal}
-        onSubmit={() => alert("Submit")}
+        onSubmit={handleAddProduct}
       />
     </>
   );

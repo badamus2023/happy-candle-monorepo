@@ -2,7 +2,9 @@ import styled from "styled-components";
 import CategoryCard from "../containers/Categories/CategoryCard";
 import FloatingAddButton from "../components/Common/FloatingAddButton";
 import PageTitle from "../components/Common/PageTitle";
-import AddCategoryModal from "../components/Forms/AddCategory/AddCategoryModal";
+import AddCategoryModal, {
+  NewCategory,
+} from "../components/Forms/AddCategory/AddCategoryModal";
 import { useState } from "react";
 
 const GridContainer = styled.div`
@@ -16,11 +18,6 @@ const GridContainer = styled.div`
 `;
 
 const CategoriesPage = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const handleOpenModal = () => setIsModalOpen(true);
-  const handleCloseModal = () => setIsModalOpen(false);
-
   const dummyCategories = [
     {
       id: "cat1",
@@ -59,11 +56,24 @@ const CategoriesPage = () => {
     },
   ];
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [categories, setCategories] = useState(dummyCategories);
+
+  const handleOpenModal = () => setIsModalOpen(true);
+  const handleCloseModal = () => setIsModalOpen(false);
+
+  const handleAddCategory = (newCat: NewCategory) => {
+    setCategories((prev) => [
+      { ...newCat, id: `cat${prev.length + 1}`, productCount: 0 },
+      ...prev,
+    ]);
+  };
+
   return (
     <>
       <PageTitle title="Categories" />
       <GridContainer>
-        {dummyCategories.map((category) => (
+        {categories.map((category) => (
           <CategoryCard
             key={category.id}
             id={category.id}
@@ -77,7 +87,7 @@ const CategoriesPage = () => {
       <AddCategoryModal
         isOpen={isModalOpen}
         onRequestClose={handleCloseModal}
-        onSubmit={() => alert("Category Added")}
+        onSubmit={handleAddCategory}
       />
     </>
   );

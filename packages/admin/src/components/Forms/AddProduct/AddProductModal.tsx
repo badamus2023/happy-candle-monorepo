@@ -1,10 +1,16 @@
 import React from "react";
 import Modal from "../../Common/Modal";
 import Flex from "../../Common/Flex";
-import { createFormHook, createFormHookContexts } from "@tanstack/react-form";
-import TextField from "../../Common/TextField";
-import TextArea from "../../Common/TextArea";
+import {
+  createFormHook,
+  createFormHookContexts,
+  useStore,
+} from "@tanstack/react-form";
+import TextField from "../../Common/Forms/TextField";
+import TextArea from "../../Common/Forms/TextArea";
 import StyledButton from "../../Common/Button";
+import { getFirstError } from "../../../utils";
+import { productSchema } from "../Schemas/ProductSchema";
 
 const { fieldContext, formContext } = createFormHookContexts();
 
@@ -49,16 +55,22 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
       category: "",
       sku: "",
     },
+    validators: {
+      onChange: productSchema,
+    },
     onSubmit: ({ value }) => {
-      alert(JSON.stringify(value, null, 2));
+      onSubmit(value);
       onRequestClose();
     },
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    form.handleSubmit();
     onRequestClose();
   };
+
+  const canSubmit = useStore(form.store, (s) => s.canSubmit && s.isDirty);
 
   return (
     <Modal
@@ -72,6 +84,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
             name="title"
             children={(field) => (
               <field.TextField
+                error={getFirstError(field)}
                 label="Title"
                 onChange={(e) => field.handleChange(e.target.value)}
               />
@@ -84,6 +97,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
             name="price"
             children={(field) => (
               <field.TextField
+                error={getFirstError(field)}
                 label="Price"
                 onChange={(e) => field.handleChange(e.target.value)}
               />
@@ -96,6 +110,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
             name="imageUrl"
             children={(field) => (
               <field.TextField
+                error={getFirstError(field)}
                 label="Image URL"
                 onChange={(e) => field.handleChange(e.target.value)}
               />
@@ -108,6 +123,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
             name="inStock"
             children={(field) => (
               <field.TextField
+                error={getFirstError(field)}
                 label="In Stock"
                 onChange={(e) => field.handleChange(e.target.value)}
               />
@@ -120,6 +136,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
             name="category"
             children={(field) => (
               <field.TextField
+                error={getFirstError(field)}
                 label="Category"
                 onChange={(e) => field.handleChange(e.target.value)}
               />
@@ -132,6 +149,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
             name="sku"
             children={(field) => (
               <field.TextField
+                error={getFirstError(field)}
                 label="SKU"
                 onChange={(e) => field.handleChange(e.target.value)}
               />
@@ -141,7 +159,9 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
 
         <Flex justifyContent="flex-end" gap="1rem" mt="1rem">
           <form.AppForm>
-            <form.StyledButton type="submit">Save</form.StyledButton>
+            <form.StyledButton type="submit" disabled={!canSubmit}>
+              Save
+            </form.StyledButton>
             <form.StyledButton type="reset" onClick={onRequestClose}>
               Cancel
             </form.StyledButton>

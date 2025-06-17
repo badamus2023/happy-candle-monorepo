@@ -51,8 +51,6 @@ export interface Action {
 }
 
 export interface ProductProps {
-  id: string;
-  area?: string;
   title: string;
   price: string;
   imageUrl: string;
@@ -61,7 +59,6 @@ export interface ProductProps {
 }
 
 const ProductCard: React.FC<ProductProps> = ({
-  area,
   title,
   price,
   imageUrl,
@@ -87,7 +84,7 @@ const ProductCard: React.FC<ProductProps> = ({
 
   return (
     <>
-      <Card area={area}>
+      <Card>
         <Flex flexDirection="column">
           <Flex justifyContent="flex-end" $alignItems="center">
             <MenuButton onClick={handleModalOpen}>...</MenuButton>
